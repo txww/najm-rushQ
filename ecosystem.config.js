@@ -1,0 +1,40 @@
+module.exports = {
+  apps: [
+    {
+      name: 'nextjs',
+      script: 'node_modules/.bin/next',
+      args: 'start',
+      cwd: '/var/www/najmrush/najm-next-backend',
+      instances: 1,
+      exec_mode: 'fork',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3000,
+      },
+      max_memory_restart: '512M',
+      error_file: '/var/log/pm2/nextjs-error.log',
+      out_file: '/var/log/pm2/nextjs-out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      restart_delay: 3000,
+      max_restarts: 10,
+    },
+    {
+      name: 'strapi',
+      script: 'node_modules/.bin/strapi',
+      args: 'start',
+      cwd: '/var/www/najmrush/najm-strapi',
+      instances: 1,
+      exec_mode: 'fork',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 1337,
+      },
+      max_memory_restart: '512M',
+      error_file: '/var/log/pm2/strapi-error.log',
+      out_file: '/var/log/pm2/strapi-out.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
+      restart_delay: 3000,
+      max_restarts: 10,
+    },
+  ],
+};
