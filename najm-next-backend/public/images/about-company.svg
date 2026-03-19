@@ -1,0 +1,17 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="aboutGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2E8B57;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#32CD32;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#aboutGrad)"/>
+  <rect x="100" y="150" width="600" height="350" fill="#F0FFF0" stroke="#228B22" stroke-width="4"/>
+  <rect x="200" y="200" width="150" height="100" fill="#2E8B57"/>
+  <rect x="400" y="200" width="150" height="100" fill="#32CD32"/>
+  <circle cx="275" cy="300" r="25" fill="#FFD700"/>
+  <circle cx="475" cy="290" r="30" fill="#FFA500"/>
+  <text x="400" y="450" text-anchor="middle" fill="#228B22" font-family="Arial" font-size="32" font-weight="bold">عن شركتنا</text>
+  <text x="400" y="490" text-anchor="middle" fill="#666" font-family="Arial" font-size="20">25 عاماً من التميز</text>
+  <text x="400" y="520" text-anchor="middle" fill="#666" font-family="Arial" font-size="16">والإبداع في مجال المقاولات</text>
+</svg>

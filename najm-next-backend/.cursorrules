@@ -1,0 +1,83 @@
+# Cursor AI Rules for Najm Rush Project
+
+## Project Overview
+This is a Next.js 16 project for Najm Rush Contracting company website, built with App Router, Tailwind CSS v4, and modern web technologies.
+
+## Code Style
+- Use Arabic comments for business logic
+- Use English for technical comments
+- Follow ESLint and Prettier configurations
+- Use functional components with hooks
+- Prefer TypeScript for new components (when possible)
+
+## Naming Conventions
+- Components: PascalCase (e.g., `ProjectCard`)
+- Files: camelCase for utilities, PascalCase for components
+- Functions: camelCase
+- Constants: UPPER_SNAKE_CASE
+
+## Architecture
+- Use App Router for all pages
+- Keep components in `/components` folder
+- Static data in `/data` folder
+- Images in `/public/images` folder
+- Use environment variables for configuration
+
+## Component Patterns
+- Use named exports for components
+- Export components as default when they're the main export
+- Use descriptive prop names
+- Add JSDoc comments for complex components
+
+## Styling Guidelines
+- Use Tailwind CSS utility classes
+- Prefer responsive design with mobile-first approach
+- Use semantic color names from Tailwind
+- Avoid inline styles, use className instead
+
+## Performance Considerations
+- Use Next.js Image component for images
+- Implement proper loading states
+- Use React.memo for expensive components when needed
+- Optimize bundle size by lazy loading
+
+## Error Handling
+- Use Error Boundaries for graceful error handling
+- Provide meaningful error messages
+- Log errors appropriately in production
+
+## Accessibility
+- Use semantic HTML elements
+- Add proper ARIA labels when needed
+- Ensure keyboard navigation works
+- Test with screen readers
+
+## Best Practices
+- Implement proper error handling
+- Add loading states for async operations
+- Use semantic HTML
+- Ensure responsive design
+- Optimize images and performance
+- Follow accessibility guidelines
+
+## Security
+- Never commit sensitive data
+- Use environment variables for API keys
+- Validate user inputs
+- Implement proper authentication if needed
+
+## Git Workflow
+- Use descriptive commit messages in Arabic
+- Create feature branches for new work
+- Test changes before committing
+- Follow conventional commit format when possible
+
+## Development Tools
+- ESLint for code linting
+- Prettier for code formatting
+- Use the provided npm scripts for development
+
+## Documentation
+- Add comments for complex logic
+- Update README for significant changes
+- Document API endpoints and data structures

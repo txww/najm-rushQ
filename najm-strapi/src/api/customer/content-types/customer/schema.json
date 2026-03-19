@@ -1,0 +1,14 @@
+﻿{
+  "kind": "collectionType",
+  "collectionName": "customers",
+  "info": { "singularName": "customer", "pluralName": "customers", "displayName": "Customer" },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "position": { "type": "string" },
+    "company": { "type": "string" },
+    "image": { "type": "string" },
+    "rating": { "type": "integer" },
+    "text": { "type": "text" },
+    "project": { "type": "string" }
+  }
+}

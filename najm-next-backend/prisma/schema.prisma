@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url = "file:./dev.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Material {
+  id          Int       @id @default(autoincrement())
+  name        String
+  image       String
+  description String
+  products    Product[]
+}
+
+model Product {
+  id              String   @id
+  name            String
+  image           String
+  description     String
+  type            String
+  properties      String
+  usage           String
+  specifications  String
+  additionalInfo  String
+  materialId      Int
+  material        Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id           String       @id
+  title        String
+  location     String
+  year         Int
+  image        String
+  summary      String
+  area         String
+  floors       Int
+  status       String
+  client       String
+  mapLocation  String
+  features     String // comma-separated
+  testimonials Testimonial[]
+}
+
+model Testimonial {
+  id        Int     @id @default(autoincrement())
+  name      String
+  feedback  String
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model SiteSettings {
+  id                Int    @id @default(autoincrement())
+  key               String @unique
+  value             String
+  description       String?
+  category          String // مثل: 'contact', 'social', 'content', 'branding'
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+model Service {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  icon        String @default("🔨")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Certificate {
+  id          Int    @id @default(autoincrement())
+  title       String
+  organization String
+  year        Int
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TeamMember {
+  id          Int    @id @default(autoincrement())
+  name        String
+  position    String
+  bio         String?
+  phone       String?
+  email       String?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Partner {
+  id          Int    @id @default(autoincrement())
+  name        String
+  logo        String?
+  website     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Customer {
+  id          Int    @id @default(autoincrement())
+  name        String
+  position    String
+  company     String?
+  image       String?
+  rating      Int    @default(5)
+  text        String
+  project     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -1,0 +1,13 @@
+﻿{
+  "kind": "collectionType",
+  "collectionName": "team_members",
+  "info": { "singularName": "team-member", "pluralName": "team-members", "displayName": "Team Member" },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "position": { "type": "string" },
+    "bio": { "type": "text" },
+    "phone": { "type": "string" },
+    "email": { "type": "email" },
+    "image": { "type": "string" }
+  }
+}

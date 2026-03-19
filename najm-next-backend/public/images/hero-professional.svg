@@ -1,0 +1,17 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a365d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#heroGrad)"/>
+  <rect x="50" y="100" width="700" height="400" fill="#f7f5f2" stroke="#c28a17" stroke-width="4"/>
+  <text x="400" y="200" text-anchor="middle" fill="#1a365d" font-family="Arial" font-size="36" font-weight="bold">شركة نجم راش</text>
+  <text x="400" y="250" text-anchor="middle" fill="#1a365d" font-family="Arial" font-size="24">للمقاولات والإنشاءات</text>
+  <text x="400" y="300" text-anchor="middle" fill="#666" font-family="Arial" font-size="18">25+ عاماً من التميز</text>
+  <circle cx="200" cy="400" r="30" fill="#c28a17"/>
+  <circle cx="300" cy="380" r="25" fill="#ffd700"/>
+  <circle cx="600" cy="420" r="35" fill="#daa520"/>
+  <text x="400" y="500" text-anchor="middle" fill="#c28a17" font-family="Arial" font-size="20" font-weight="bold">الريادة في الإنشاءات</text>
+</svg>

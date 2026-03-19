@@ -1,0 +1,15 @@
+<svg width="200" height="150" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8A2BE2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DA70D6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="150" fill="url(#grad6)" stroke="#9932CC" stroke-width="3"/>
+  <rect x="20" y="30" width="160" height="90" fill="#F8F8FF" stroke="#8A2BE2" stroke-width="2"/>
+  <rect x="30" y="40" width="50" height="30" fill="#8A2BE2"/>
+  <rect x="90" y="40" width="80" height="20" fill="#DA70D6"/>
+  <rect x="90" y="70" width="80" height="40" fill="#F8F8FF" stroke="#8A2BE2" stroke-width="1"/>
+  <text x="100" y="130" text-anchor="middle" fill="#9932CC" font-family="Arial" font-size="12" font-weight="bold">لوحة عرض</text>
+  <text x="100" y="145" text-anchor="middle" fill="#666" font-family="Arial" font-size="10">6</text>
+</svg>

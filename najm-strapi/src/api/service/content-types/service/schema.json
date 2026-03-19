@@ -1,0 +1,10 @@
+﻿{
+  "kind": "collectionType",
+  "collectionName": "services",
+  "info": { "singularName": "service", "pluralName": "services", "displayName": "Service" },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text" },
+    "icon": { "type": "string" }
+  }
+}

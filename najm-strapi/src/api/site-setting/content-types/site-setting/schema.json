@@ -1,0 +1,11 @@
+﻿{
+  "kind": "collectionType",
+  "collectionName": "site_settings",
+  "info": { "singularName": "site-setting", "pluralName": "site-settings", "displayName": "Site Setting" },
+  "attributes": {
+    "key": { "type": "string", "required": true },
+    "value": { "type": "text" },
+    "description": { "type": "string" },
+    "category": { "type": "string" }
+  }
+}

@@ -1,0 +1,11 @@
+﻿{
+  "kind": "collectionType",
+  "collectionName": "materials",
+  "info": { "singularName": "material", "pluralName": "materials", "displayName": "Material" },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "image": { "type": "string" },
+    "description": { "type": "text" },
+    "products": { "type": "relation", "relation": "oneToMany", "target": "api::product.product", "mappedBy": "material" }
+  }
+}

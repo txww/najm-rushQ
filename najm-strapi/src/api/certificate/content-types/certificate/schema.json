@@ -1,0 +1,11 @@
+﻿{
+  "kind": "collectionType",
+  "collectionName": "certificates",
+  "info": { "singularName": "certificate", "pluralName": "certificates", "displayName": "Certificate" },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "organization": { "type": "string" },
+    "year": { "type": "integer" },
+    "image": { "type": "string" }
+  }
+}

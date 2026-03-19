@@ -1,0 +1,410 @@
+/* استيراد الخط */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================
+   متغيرات لونية ورقمية
+   ========================= */
+:root {
+  --brand-dark: #0b1220;
+  --brand-surface: #f7f5f2;
+  --brand-text: #0b1a2b;
+  --brand-gold: #c28a17;
+  --accent-cyan: #06b6d4;
+  --accent-yellow: #f59e0b;
+
+  --primary-color: #104979;
+  --secondary-color: #ffb039;
+  --white: #ffffff;
+  --black: #000000;
+
+  --arabic-font: 'Tajawal', sans-serif;
+  --text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  --box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+
+  --radius-sm: 8px;
+  --radius-md: 25px;
+
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-bold: 700;
+  --font-extrabold: 800;
+}
+
+/* =========================
+   قواعد أساسية محسنة للعين
+   ========================= */
+html,
+body {
+  height: 100%;
+  direction: rtl;
+  font-family: var(--arabic-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--brand-dark);
+  color: white;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  color: #d1d5db;
+  font-weight: 400;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* تحسين النصوص للعين */
+h1, h2, h3, h4, h5, h6 {
+  color: white;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--brand-gold);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #fbbf24;
+}
+
+/* تحسين الأزرار */
+button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 2px;
+}
+
+/* =========================
+   حاويات وتباعد
+   ========================= */
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.main-content-spacing {
+  padding-top: calc(4rem + var(--header-height, 64px));
+}
+@media (min-width: 768px) {
+  .main-content-spacing {
+    padding-top: calc(6rem + var(--header-height, 72px));
+  }
+}
+
+/* =========================
+   البطاقات المحسنة
+   ========================= */
+.card {
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+  color: var(--brand-text);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-color: rgba(194, 138, 23, 0.3);
+}
+.card .card-media {
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+}
+.card .card-media::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(0,0,0,0.1) 100%);
+  pointer-events: none;
+}
+.card .card-content {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* =========================
+   نصوص وعناوين
+   ========================= */
+.h1-brand {
+  font-size: 2.5rem;
+  line-height: 1.05;
+  font-weight: 800;
+  color: var(--brand-gold);
+}
+.h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brand-text);
+}
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
+
+/* =========================
+   أزرار محسنة
+   ========================= */
+.btn-cta {
+  background: linear-gradient(135deg, #fcd34d, #f59e0b);
+  color: #08121a;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  padding: 1rem 2rem;
+  box-shadow: 0 8px 24px rgba(194, 138, 23, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+.btn-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+.btn-cta:hover::before {
+  left: 100%;
+}
+.btn-cta:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(194, 138, 23, 0.4);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1.5rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(194, 138, 23, 0.3);
+  transform: translateY(-2px);
+}
+
+/* =========================
+   FAB واتساب
+   ========================= */
+.fab-safe {
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.fab-safe:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 24px rgba(22, 163, 74, 0.45);
+}
+
+/* =========================
+   Banner نصوص كبيرة
+   ========================= */
+.banner__content p {
+  color: var(--white);
+  font-size: 50px;
+  font-weight: var(--font-extrabold);
+  text-shadow: var(--text-shadow);
+  z-index: 2;
+  padding-inline-start: 0;
+}
+@media (max-width: 768px) {
+  .banner__content p {
+    font-size: 40px;
+  }
+}
+@media (max-width: 500px) {
+  .banner__content p {
+    font-size: 30px;
+  }
+}
+@media (max-width: 450px) {
+  .banner__content p {
+    font-size: 30px;
+  }
+}
+
+/* =========================
+   Animations محسنة
+   ========================= */
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.animate-slide-up {
+  animation: slide-up 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 600ms ease-out;
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.animate-scale-in {
+  animation: scale-in 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* تحسين التمرير السلس */
+html {
+  scroll-behavior: smooth;
+}
+
+/* تحسين التحديد */
+::selection {
+  background-color: rgba(194, 138, 23, 0.3);
+  color: white;
+}
+
+/* =========================
+   الوصول Accessibility محسن
+   ========================= */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 3px solid var(--brand-gold);
+  outline-offset: 3px;
+  border-radius: 6px;
+  transition: outline 0.2s ease;
+}
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* تقليل الحركة للمستخدمين الذين يفضلون ذلك */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================
+   Footer & icons
+   ========================= */
+@layer components {
+  .footer-link {
+    @apply text-white hover:text-[var(--brand-gold,#C28A17)] transition font-medium;
+    opacity: 0.75; /* بدل opacity-75 */
+  }
+
+  .footer-icon {
+    @apply w-10 h-10 rounded-full bg-white/10 flex items-center justify-center 
+           text-white hover:bg-white/20 transition text-lg;
+    opacity: 0.85; /* بدل opacity-85 */
+  }
+}
+
+/* =========================
+   Sections Grid
+   ========================= */
+.sections-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .sections-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* =========================
+   صفحات الشكر ThanksPage
+   ========================= */
+.thanks-card {
+  border-radius: var(--radius-md);
+  padding: 2.5rem;
+  background: var(--brand-surface);
+  color: var(--brand-text);
+  box-shadow: 0 16px 36px rgba(11, 18, 32, 0.3);
+  text-align: center;
+}
+
+/* =========================
+   نهاية الملف
+   ========================= */
