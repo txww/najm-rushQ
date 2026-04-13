@@ -16,17 +16,18 @@
         .content { padding: 25px; text-align: center; }
         input, select, textarea, button { width: 100%; padding: 14px; margin-bottom: 14px; border-radius: 10px; border: 1px solid #444; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; font-size: 14px; outline: none; transition: 0.3s; }
         input:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
-        button { background: linear-gradient(45deg, var(--gold), #b38f2d); color: black; font-weight: bold; cursor: pointer; border: none; font-size: 15px; position: relative; display: flex; justify-content: center; align-items: center; }
-        button:hover { filter: brightness(1.2); transform: translateY(-1px); }
-        button:active { transform: translateY(1px); }
-        button:disabled { background: #555; cursor: not-allowed; filter: none; }
         
-        /* تأثير دائرة التحميل */
-        .loader { width: 20px; height: 20px; border: 3px solid rgba(0,0,0,0.1); border-top: 3px solid black; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; margin-left: 10px; }
+        /* زر احترافي مع حركة تحميل */
+        button { background: linear-gradient(45deg, var(--gold), #b38f2d); color: black; font-weight: bold; cursor: pointer; border: none; font-size: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; position: relative; overflow: hidden; }
+        button:hover { filter: brightness(1.2); }
+        button:disabled { background: #555; cursor: not-allowed; }
+
+        /* دائرة التحميل (Spinner) */
+        .spinner { width: 18px; height: 18px; border: 3px solid rgba(0,0,0,0.1); border-top: 3px solid black; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* تأثير خط التقدم عند الإرسال */
-        .progress-bar { width: 0%; height: 4px; background: var(--neon); position: absolute; top: 0; left: 0; transition: 0.3s; }
+
+        /* خط التقدم (Progress Bar) */
+        .loading-line { width: 0%; height: 3px; background: var(--neon); position: absolute; top: 0; left: 0; transition: 0.3s; }
 
         label { display: block; text-align: right; margin-bottom: 5px; font-size: 12px; color: var(--gold); }
         .neon-note { color: var(--neon); font-size: 12px; font-weight: bold; margin-bottom: 15px; text-align: right; border: 1px dashed var(--neon); padding: 10px; border-radius: 8px; line-height: 1.6; background: rgba(0,255,128,0.05); }
@@ -42,13 +43,38 @@
         <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
         <input type="password" id="loginPass" placeholder="كلمة المرور">
         <button id="loginBtn" onclick="login()">
-            <span class="loader" id="l-loader"></span>
+            <div class="spinner" id="loginSpinner"></div>
             <span>دخول</span>
         </button>
         <p>
             <span class="switch-link" onclick="showView('regSection')">إنشاء حساب</span> |
             <span class="switch-link" onclick="showView('forgotSection')">نسيت كلمة المرور؟</span>
         </p>
+    </div>
+</div>
+
+<div id="forgotSection" class="container hidden">
+    <div class="header"><h2>استعادة الحساب</h2></div>
+    <div class="content">
+        <p style="font-size:12px;color:#aaa;">أدخل رقمك المسجل لإرسال كود التحقق</p>
+        <input type="tel" id="forgotPhone" placeholder="9639xxxxxxxx">
+        <button id="forgotBtn" onclick="sendResetOTP()">
+            <div class="spinner" id="forgotSpinner"></div>
+            <span>إرسال كود التغيير</span>
+        </button>
+        <p><span class="switch-link" onclick="showView('loginSection')">رجوع</span></p>
+    </div>
+</div>
+
+<div id="resetPassSection" class="container hidden">
+    <div class="header"><h2>تغيير كلمة المرور</h2></div>
+    <div class="content">
+        <input type="text" id="resetOtpInput" placeholder="أدخل الكود" maxlength="4">
+        <input type="password" id="newPassInput" placeholder="كلمة المرور الجديدة">
+        <button id="resetBtn" onclick="verifyAndReset()">
+            <div class="spinner" id="resetSpinner"></div>
+            <span>تحديث الآن</span>
+        </button>
     </div>
 </div>
 
@@ -59,15 +85,26 @@
         <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
         <input type="password" id="regPass" placeholder="كلمة المرور">
         <button id="regBtn" onclick="sendRegOTP()">
-            <span class="loader" id="r-loader"></span>
+            <div class="spinner" id="regSpinner"></div>
             <span>إرسال كود التفعيل</span>
         </button>
         <p><span class="switch-link" onclick="showView('loginSection')">لديك حساب؟ دخول</span></p>
     </div>
 </div>
 
+<div id="otpSection" class="container hidden">
+    <div class="header"><h2>تأكيد الرقم</h2></div>
+    <div class="content">
+        <input type="text" id="otpInput" placeholder="أدخل الكود" maxlength="4">
+        <button id="otpBtn" onclick="verifyAndRegister()">
+            <div class="spinner" id="otpSpinner"></div>
+            <span>تفعيل الحساب</span>
+        </button>
+    </div>
+</div>
+
 <div id="mainApp" class="container hidden">
-    <div class="progress-bar" id="mainProgress"></div>
+    <div class="loading-line" id="topProgress"></div>
     <div class="sidebar">
         <div>مرحباً: <span id="displayName" class="user-tag">..</span></div>
         <div>رصيدك: <b id="displayLimit" style="color:var(--gold);">0</b></div>
@@ -76,18 +113,21 @@
         <div class="neon-note">⚠️ الأرقام تبدأ بـ 963 بدون صفر وبدون (+)<br>مثال: 963968899922</div>
         <label>المعرف (Sender ID):</label>
         <select id="sid">
-            <option value="Amgad-sms">Amgad-sms</option>
-            <option value="ciedco-sms">ciedco-sms</option>
-            <option value="Najm-Rush">Najm-Rush</option>
+            <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
+            <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
+            <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
+            <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
         </select>
-        <textarea id="mno" rows="4" placeholder="الأرقام (رقم بكل سطر)"></textarea>
-        <textarea id="msg" rows="3" placeholder="نص الرسالة..." oninput="updateSmsInfo()"></textarea>
+        <label>أرقام المستلمين (رقم بكل سطر):</label>
+        <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
+        <label>نص الرسالة:</label>
+        <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="updateSmsInfo()"></textarea>
         <div class="sms-info">
             <span>الحروف: <b id="charCount">0</b></span>
-            <span>الرسائل: <b id="segCount">1</b></span>
+            <span>الرسائل/رقم: <b id="segCount">1</b></span>
         </div>
         <button id="sendBtn">
-            <span class="loader" id="s-loader"></span>
+            <div class="spinner" id="sendSpinner"></div>
             <span>بدء الإرسال الآن</span>
         </button>
         <div id="status" style="font-size:12px;margin-top:8px;color:var(--gold);font-weight:bold;"></div>
@@ -95,9 +135,9 @@
 </div>
 
 <script>
-// --- إعدادات الربط الآمنة والمحدثة ---
+// --- إعدادات الحماية والروابط ---
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwK0jv6yElE45fVj9zmrZnzh7Gp8qKkz22FfhiXnWyos58h3FLB-4qEhBCu1UEjG7uF/exec";
-const MY_SECRET = "A@112233"; // مفتاح الحماية المطابق للسكريبت
+const SEC_KEY = "A@112233";
 
 var uLimit = 0, uName = '', cPhone = '';
 
@@ -112,98 +152,101 @@ function updateSmsInfo() {
     document.getElementById('segCount').innerText = len <= 70 ? 1 : Math.ceil(len / 67);
 }
 
-function toggleLoader(btnId, show) {
+// دالة التحميل التجميلية
+function setBusy(btnId, spinnerId, isBusy) {
     const btn = document.getElementById(btnId);
-    const loader = btn.querySelector('.loader');
-    if (show) {
-        btn.disabled = true;
-        loader.style.display = 'block';
-    } else {
-        btn.disabled = false;
-        loader.style.display = 'none';
-    }
+    const spinner = document.getElementById(spinnerId);
+    btn.disabled = isBusy;
+    spinner.style.display = isBusy ? 'block' : 'none';
 }
 
-// تسجيل الدخول
+// طلب السكريبت مع الحماية
+function callServer(params) {
+    params.key = SEC_KEY; // إضافة مفتاح الحماية لكل طلب
+    const query = Object.keys(params).map(k => k + '=' + encodeURIComponent(params[k])).join('&');
+    return fetch(SCRIPT_URL + '?' + query).then(r => r.json());
+}
+
 function login() {
     var phone = document.getElementById('loginPhone').value.trim();
     var pass = document.getElementById('loginPass').value;
-    if (!phone || !pass) return alert('يرجى تعبئة البيانات');
+    if (!phone || !pass) return alert('أدخل البيانات');
 
-    toggleLoader('loginBtn', true);
-    
-    fetch(`${SCRIPT_URL}?action=login&phone=${phone}&pass=${pass}&key=${MY_SECRET}`)
-    .then(r => r.json())
+    setBusy('loginBtn', 'loginSpinner', true);
+    callServer({ action: 'login', phone: phone, pass: pass })
     .then(d => {
         if (d.ok) {
             cPhone = phone; uName = d.name; uLimit = d.limit;
             document.getElementById('displayName').innerText = uName;
             document.getElementById('displayLimit').innerText = uLimit;
             showView('mainApp');
-        } else {
-            alert(d.error || 'خطأ في الدخول');
-        }
+        } else { alert(d.error || 'بيانات خاطئة'); }
     })
-    .catch(() => alert('خطأ في الاتصال بالسيرفر'))
-    .finally(() => toggleLoader('loginBtn', false));
+    .catch(() => alert('خطأ بالاتصال بالسيرفر'))
+    .finally(() => setBusy('loginBtn', 'loginSpinner', false));
 }
 
-// طلب إنشاء حساب (مع حماية الـ 3 محاولات)
 function sendRegOTP() {
     var phone = document.getElementById('regPhone').value.trim();
     var name = document.getElementById('regName').value.trim();
     var pass = document.getElementById('regPass').value;
-    if (phone.length !== 12 || !name || !pass) return alert('البيانات غير مكتملة');
+    if (phone.length !== 12 || !name || !pass) return alert('تأكد من البيانات');
 
-    toggleLoader('regBtn', true);
-
-    fetch(`${SCRIPT_URL}?action=send-otp&phone=${phone}&key=${MY_SECRET}`)
-    .then(r => r.json())
+    setBusy('regBtn', 'regSpinner', true);
+    callServer({ action: 'send-otp', phone: phone })
     .then(d => {
-        if (d.error) {
-            alert(d.error); // هنا تظهر رسالة الحظر إذا حاول الشخص أكثر من 3 مرات
-        } else {
-            cPhone = phone;
-            // لمحاكاة النظام الأصلي، ننتقل مباشرة للتأكيد (بافتراض إرسال الكود خارجياً)
-            alert('تم التحقق، اضغط موافق للمتابعة');
-            showView('otpSection');
-        }
+        if (d.error) return alert(d.error);
+        cPhone = phone;
+        showView('otpSection');
     })
-    .finally(() => toggleLoader('regBtn', false));
+    .finally(() => setBusy('regBtn', 'regSpinner', false));
 }
 
-// وظيفة الإرسال مع خط التقدم
+function verifyAndRegister() {
+    var otp = document.getElementById('otpInput').value.trim();
+    var name = document.getElementById('regName').value.trim();
+    var pass = document.getElementById('regPass').value;
+    if (otp.length < 1) return alert('أدخل الكود');
+
+    setBusy('otpBtn', 'otpSpinner', true);
+    callServer({ action: 'register', phone: cPhone, name: name, pass: pass, otp: otp })
+    .then(d => {
+        if (d.ok) { alert('تم إنشاء حسابك بنجاح!'); showView('loginSection'); }
+        else alert(d.error);
+    })
+    .finally(() => setBusy('otpBtn', 'otpSpinner', false));
+}
+
+// دالة الإرسال مع خط التقدم الاحترافي
 document.getElementById('sendBtn').onclick = function() {
     var btn = this;
     var st = document.getElementById('status');
-    var progress = document.getElementById('mainProgress');
+    var progress = document.getElementById('topProgress');
     var msg = document.getElementById('msg').value;
     var sid = document.getElementById('sid').value;
     var lines = document.getElementById('mno').value.split(/\r?\n/);
     var nums = lines.map(n => n.trim()).filter(n => n.length === 12);
 
-    if (!nums.length || !msg) return alert('الأرقام أو الرسالة فارغة');
-    
     var segs = msg.length <= 70 ? 1 : Math.ceil(msg.length / 67);
-    if ((nums.length * segs) > uLimit) return alert('الرصيد غير كافٍ');
+    if (!nums.length || !msg) return alert('أدخل الأرقام والرسالة');
+    if ((nums.length * segs) > uLimit) return alert('الرصيد لا يكفي');
 
-    toggleLoader('sendBtn', true);
+    setBusy('sendBtn', 'sendSpinner', true);
     var sc = 0, idx = 0;
 
     function sendNext() {
         if (idx >= nums.length) {
-            alert(`تم إرسال ${sc} رسالة بنجاح!`);
-            toggleLoader('sendBtn', false);
-            progress.style.width = '0%';
+            alert('تم الإرسال لـ ' + sc + ' رقم بنجاح');
+            setBusy('sendBtn', 'sendSpinner', false);
             st.innerText = '';
+            progress.style.width = '0%';
             return;
         }
 
-        st.innerText = `جاري الإرسال: ${idx + 1} / ${nums.length}`;
+        st.innerText = 'إرسال ' + (idx + 1) + ' من ' + nums.length;
         progress.style.width = ((idx + 1) / nums.length * 100) + '%';
 
-        // تحديث الرصيد في السكريبت لكل رسالة
-        fetch(`${SCRIPT_URL}?action=update&phone=${cPhone}&newLimit=${uLimit - segs}&key=${MY_SECRET}`)
+        callServer({ action: 'update', phone: cPhone, newLimit: uLimit - segs })
         .then(() => {
             sc++;
             uLimit -= segs;
@@ -217,4 +260,3 @@ document.getElementById('sendBtn').onclick = function() {
 </script>
 </body>
 </html>
-
