@@ -26,7 +26,6 @@
             min-height: 100vh;
             margin: 0;
             padding: 15px;
-            overflow-x: hidden;
         }
         .container {
             width: 100%;
@@ -45,7 +44,6 @@
             text-align: center;
             border-bottom: 2px solid var(--gold);
         }
-        .header-banner h2 { margin: 0; font-size: 24px; color: white; }
         .sidebar {
             background: rgba(255,255,255,0.05);
             padding: 15px 20px;
@@ -66,10 +64,8 @@
             width: 100%; padding: 15px; border-radius: 12px;
             background: linear-gradient(45deg, var(--gold), #b38f2d);
             color: black; font-weight: bold; cursor: pointer;
-            border: none; font-size: 16px; text-transform: uppercase;
-            position: relative;
+            border: none; font-size: 16px; position: relative;
         }
-        button:disabled { background: #555; cursor: not-allowed; }
         .loader {
             display: none; position: absolute; top: 50%; left: 15px;
             transform: translateY(-50%); width: 20px; height: 20px;
@@ -81,10 +77,8 @@
         .sms-info {
             background: rgba(255,255,255,0.05);
             padding: 10px; border-radius: 8px; font-size: 13px;
-            margin-top: -15px; margin-bottom: 20px;
-            display: flex; justify-content: space-between; border: 1px dashed #555;
+            margin-bottom: 20px; display: flex; justify-content: space-between;
         }
-        .switch-link { color: #ccc; cursor: pointer; font-size: 14px; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -93,43 +87,9 @@
 
     <div id="loginSection" class="section">
         <div class="content">
-            <h3 style="text-align:center;color:var(--gold);">تسجيل الدخول</h3>
-            <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
+            <input type="tel" id="loginPhone" placeholder="رقم الهاتف">
             <input type="password" id="loginPass" placeholder="كلمة المرور">
             <button id="loginBtn" onclick="login()"><span>دخول</span><div class="loader"></div></button>
-            <div style="text-align:center;margin-top:20px;">
-                <span class="switch-link" onclick="showView('regSection')">إنشاء حساب جديد</span>
-                <span style="color:#444"> | </span>
-                <span class="switch-link" onclick="showView('forgotSection')">نسيت السر؟</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="regSection" class="section hidden">
-        <div class="content">
-            <h3 style="color:var(--gold);">عضوية جديدة</h3>
-            <input type="text" id="regName" placeholder="الاسم الكامل">
-            <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
-            <input type="password" id="regPass" placeholder="كلمة المرور">
-            <button id="regBtn" onclick="sendRegOTP()"><span>إرسال كود التفعيل</span><div class="loader"></div></button>
-            <p style="text-align:center;"><span class="switch-link" onclick="showView('loginSection')">رجوع</span></p>
-        </div>
-    </div>
-
-    <div id="forgotSection" class="section hidden">
-        <div class="content">
-            <h3 style="color:var(--gold);">استعادة الحساب</h3>
-            <input type="tel" id="forgotPhone" placeholder="9639xxxxxxxx">
-            <button id="forgotBtn" onclick="sendResetOTP()"><span>إرسال كود الاستعادة</span><div class="loader"></div></button>
-            <p style="text-align:center;"><span class="switch-link" onclick="showView('loginSection')">رجوع</span></p>
-        </div>
-    </div>
-
-    <div id="otpSection" class="section hidden">
-        <div class="content">
-            <h3 style="color:var(--gold)">تأكيد الكود</h3>
-            <input type="number" id="otpInput" placeholder="أدخل كود الـ OTP">
-            <button id="otpBtn" onclick="verifyAndRegister()"><span>تفعيل الآن</span><div class="loader"></div></button>
         </div>
     </div>
 
@@ -146,12 +106,12 @@
                 <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
                 <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
             </select>
-            <textarea id="mno" rows="4" placeholder="9639xxxxxxxx (رقم بكل سطر)"></textarea>
-            <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="updateSmsLive()"></textarea>
+            <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
+            <textarea id="msg" rows="3" placeholder="نص الرسالة..." oninput="updateSmsLive()"></textarea>
             
             <div class="sms-info">
                 <span>الحروف: <b id="charCount">0</b></span>
-                <span>الرسائل/رقم: <b id="segCount">1</b></span>
+                <span>القطع/رقم: <b id="segCount">1</b></span>
             </div>
 
             <button id="sendBtn"><span>إرسال الرسائل الآن</span><div class="loader"></div></button>
@@ -163,8 +123,7 @@
 <script>
     const API_URL = '/sms-api';
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWd-CeGoULG8pgK32ZqCYGg9N3p8YxlB6HkEco8KTCr-CAXzrCSmxrp4hjJcMuUss/exec";
-
-    let gOTP, tempUser, uLimit, uName, cPhone;
+    let uLimit, uName, cPhone;
 
     function getSmsInfo(text) {
         const len = text.length;
@@ -178,13 +137,6 @@
         document.getElementById('segCount').innerText = info.segs;
     }
 
-    function setLoading(btnId, state) {
-        const btn = document.getElementById(btnId);
-        if(!btn) return;
-        state ? btn.classList.add('is-loading') : btn.classList.remove('is-loading');
-        btn.disabled = state;
-    }
-
     function showView(id) {
         document.querySelectorAll('.section').forEach(v => v.classList.add('hidden'));
         document.getElementById(id).classList.remove('hidden');
@@ -193,44 +145,16 @@
     async function login() {
         const p = document.getElementById('loginPhone').value.trim();
         const s = document.getElementById('loginPass').value;
-        setLoading('loginBtn', true);
         try {
             const r = await fetch(`${SCRIPT_URL}?phone=${p}&pass=${s}&action=login`);
             const d = await r.json();
-            if(d === "Wrong") alert("خطأ في البيانات");
-            else {
+            if(d !== "Wrong") {
                 cPhone = p; uName = d.name; uLimit = d.limit;
                 document.getElementById('displayName').innerText = uName;
                 document.getElementById('displayLimit').innerText = uLimit;
                 showView('mainApp');
-            }
+            } else alert("خطأ في البيانات");
         } catch(e) { alert("خطأ اتصال"); }
-        setLoading('loginBtn', false);
-    }
-
-    async function sendRegOTP() {
-        const p = document.getElementById('regPhone').value.trim();
-        setLoading('regBtn', true);
-        gOTP = Math.floor(1000 + Math.random() * 9000);
-        tempUser = {p, n: document.getElementById('regName').value, s: document.getElementById('regPass').value};
-        try {
-            await fetch(`${API_URL}/send-otp`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ phone: p, msg: `كود تفعيلك: ${gOTP}` })
-            });
-            showView('otpSection');
-        } catch(e) { alert("فشل الإرسال"); }
-        setLoading('regBtn', false);
-    }
-
-    async function verifyAndRegister() {
-        if(document.getElementById('otpInput').value == gOTP) {
-            setLoading('otpBtn', true);
-            await fetch(`${SCRIPT_URL}?phone=${tempUser.p}&name=${tempUser.n}&pass=${tempUser.s}&action=register`);
-            setLoading('otpBtn', false);
-            alert("تم التسجيل!"); showView('loginSection');
-        } else alert("الكود خطأ");
     }
 
     document.getElementById('sendBtn').onclick = async () => {
@@ -238,16 +162,13 @@
         const msg = document.getElementById('msg').value;
         const sid = document.getElementById('sid').value;
         const nums = mno.split(/\r?\n/).map(l => l.trim()).filter(l => l.length === 12);
-        
         const info = getSmsInfo(msg);
-        const totalNeeded = nums.length * info.segs;
 
         if(nums.length === 0 || !msg) return alert("أدخل البيانات");
-        if(totalNeeded > uLimit) return alert(`رصيدك لا يكفي. مطلوب ${totalNeeded} قطعة.`);
-
-        setLoading('sendBtn', true);
+        
+        document.getElementById('sendBtn').classList.add('is-loading');
         let sc = 0;
-        let report = `🚀 حملة: ${uName}\nالمعرف: ${sid}\nنص: ${msg}\nالقطع: ${info.segs}\n`;
+        let report = `🚀 حملة: ${uName}\nالمعرف: ${sid}\nنص: ${msg}\n`;
 
         for(let i = 0; i < nums.length; i++) {
             document.getElementById('status').innerText = `جاري الإرسال (${i+1}/${nums.length})`;
@@ -258,29 +179,29 @@
                     body: JSON.stringify({ mno: nums[i], msg, sid })
                 });
 
-                if(r.ok) {
+                // ✅ أي استجابة ناجحة من السيرفر تعتبر إرسالاً ناجحاً للخصم
+                if(r.status === 200) {
                     sc++;
                     uLimit -= info.segs;
                     document.getElementById('displayLimit').innerText = uLimit;
                     report += `- ${nums[i]} ✅\n`;
+                    // تحديث فوري للشيت
                     fetch(`${SCRIPT_URL}?phone=${cPhone}&action=update&newLimit=${uLimit}`);
                 } else {
-                    report += `- ${nums[i]} ❌\n`;
+                    report += `- ${nums[i]} ❌ (خطأ سيرفر)\n`;
                 }
-            } catch(e) { report += `- ${nums[i]} ⚠️\n`; }
-            await new Promise(res => setTimeout(res, 600));
+            } catch(e) { report += `- ${nums[i]} ⚠️ (فشل اتصال)\n`; }
         }
 
-        setLoading('sendBtn', false);
+        document.getElementById('sendBtn').classList.remove('is-loading');
         alert(`تم! الناجح: ${sc}. الخصم: ${sc * info.segs}`);
         
-        // إرسال التقرير الكامل للتلغرام كما طلبت
+        // إرسال التقرير للتلغرام
         fetch(`${API_URL}/notify`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ text: report + `\n🏁 المتبقي: ${uLimit}` })
         });
-        document.getElementById('status').innerText = "";
     };
 </script>
 </body>
