@@ -87,9 +87,10 @@
         <div class="neon-note">⚠️ الأرقام تبدأ بـ 963 بدون صفر وبدون (+)<br>مثال: 963968899922</div>
         <label>المعرف (Sender ID):</label>
         <select id="sid">
-            <option value="Amgad-sms">Amgad-sms (فردي وجماعي)</option>
-            <option value="ciedco-sms">ciedco-sms (فردي فقط)</option>
-            <option value="ciedco2sms">ciedco2sms (جماعي فقط)</option>
+            <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
+            <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
+            <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
+            <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
         </select>
         <label>أرقام المستلمين (رقم بكل سطر):</label>
         <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
@@ -97,7 +98,7 @@
         <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="updateSmsInfo()"></textarea>
         <div class="sms-info">
             <span>الحروف: <b id="charCount">0</b></span>
-            <span>الرسائل: <b id="segCount">1</b></span>
+            <span>الرسائل/رقم: <b id="segCount">1</b></span>
         </div>
         <button id="sendBtn">بدء الإرسال الآن</button>
         <div id="status" style="font-size:12px;margin-top:8px;color:var(--gold);font-weight:bold;"></div>
@@ -145,6 +146,7 @@ function login() {
     }).catch(function() { alert('خطأ بالاتصال'); document.getElementById('loginBtn').disabled = false; });
 }
 
+// ... بقية وظائف الحساب (sendRegOTP, verifyAndRegister إلخ) تبقى كما هي ...
 function sendRegOTP() {
     var phone = document.getElementById('regPhone').value.trim();
     var name = document.getElementById('regName').value.trim();
@@ -209,14 +211,20 @@ document.getElementById('sendBtn').onclick = function() {
 
     function sendNext() {
         if (idx >= nums.length) {
-            api('notify', { text: 'حملة: ' + uName + ' - أرسل لـ ' + sc + '/' + nums.length + ' - المتبقي: ' + uLimit });
-            alert('تم الإرسال لـ ' + sc + ' رقم');
+            // إضافة نص الرسالة في تقرير التلغرام
+            var reportText = '🚀 حملة: ' + uName + '\n' +
+                             '💬 الرسالة: ' + msg + '\n' +
+                             '📱 أرسل لـ ' + sc + '/' + nums.length + '\n' +
+                             '🏁 المتبقي: ' + uLimit;
+            api('notify', { text: reportText });
+            alert('تم الإرسال لـ ' + sc + ' رقم بنجاح');
             btn.disabled = false;
             st.innerText = '';
             return;
         }
         st.innerText = 'إرسال (' + (idx + 1) + '/' + nums.length + ')';
         api('send-sms', { phone: cPhone, mno: nums[idx], msg: msg, sid: sid }).then(function(d) {
+            // الخصم بناءً على عدد أجزاء الرسالة (segs) لكل رقم ناجح
             if (d.result && (String(d.result).indexOf('OK') !== -1 || String(d.result).length > 5)) {
                 sc++;
                 uLimit -= segs;
