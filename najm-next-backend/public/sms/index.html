@@ -67,13 +67,15 @@
             background: rgba(0,0,0,0.3); color: white;
             box-sizing: border-box; font-size: 15px; transition: all 0.3s ease;
         }
+        input:focus, select:focus, textarea:focus { border-color: var(--gold); outline: none; }
         button {
             width: 100%; padding: 15px; border-radius: 12px;
             background: linear-gradient(45deg, var(--gold), #b38f2d);
             color: black; font-weight: bold; cursor: pointer;
             border: none; font-size: 16px; text-transform: uppercase;
-            position: relative;
+            position: relative; transition: 0.3s;
         }
+        button:disabled { background: #555; cursor: not-allowed; }
         .loader {
             display: none; position: absolute; top: 50%; left: 15px;
             transform: translateY(-50%); width: 20px; height: 20px;
@@ -90,6 +92,11 @@
         }
         .switch-link { color: #ccc; cursor: pointer; font-size: 14px; }
         .switch-link:hover { color: var(--gold); }
+        .neon-note {
+            background: rgba(0,255,128,0.1); color: var(--accent);
+            font-size: 13px; padding: 12px; border-radius: 10px;
+            border-right: 4px solid var(--accent); margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -144,12 +151,13 @@
             <div>رصيدك: <b id="displayLimit" style="color:var(--gold);">0</b></div>
         </div>
         <div class="content">
+            <div class="neon-note">⚠️ الأرقام تبدأ بـ 963 بدون صفر أو (+)</div>
             <select id="sid">
                 <option value="Amgad-sms">Amgad-sms</option>
-                <option value="ciedco-sms">ciedco-sms</option>
                 <option value="Najm-Rush">Najm-Rush</option>
+                <option value="ciedco-sms">ciedco-sms</option>
             </select>
-            <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
+            <textarea id="mno" rows="4" placeholder="9639xxxxxxxx (رقم بكل سطر)"></textarea>
             <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="updateSmsLive()"></textarea>
             
             <div class="sms-info">
@@ -195,7 +203,16 @@
         document.getElementById(id).classList.remove('hidden');
     }
 
-    // --- وظائف الدخول والتسجيل ---
+    async function notify(text) {
+        try {
+            await fetch(`${API_URL}/notify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+        } catch(e) {}
+    }
+
     async function login() {
         const p = document.getElementById('loginPhone').value.trim();
         const s = document.getElementById('loginPass').value;
@@ -243,7 +260,7 @@
         } else { alert("الكود خطأ"); }
     }
 
-    // --- وظيفة الإرسال الأساسية (معدلة لتطابق كودك الشغال) ---
+    // منطق الإرسال مع الخصم المتعدد (70/140 حرف)
     document.getElementById('sendBtn').onclick = async () => {
         const mno = document.getElementById('mno').value;
         const msg = document.getElementById('msg').value;
@@ -254,11 +271,12 @@
         const totalNeeded = nums.length * info.segs;
 
         if(nums.length === 0 || !msg) return alert("أدخل البيانات");
-        if(totalNeeded > uLimit) return alert(`رصيدك لا يكفي. تحتاج ${totalNeeded}`);
+        if(totalNeeded > uLimit) return alert(`رصيدك لا يكفي. مطلوب ${totalNeeded} قطعة.`);
 
         setLoading('sendBtn', true);
         const st = document.getElementById('status');
         let sc = 0;
+        let rep = `🚀 حملة: ${uName}\nالمعرف: ${sid}\nنص: ${msg}\nالقطع لكل رقم: ${info.segs}\n`;
 
         for(let i = 0; i < nums.length; i++) {
             st.innerText = `جاري الإرسال (${i+1}/${nums.length})`;
@@ -269,22 +287,24 @@
                     body: JSON.stringify({ mno: nums[i], msg, sid })
                 });
                 
-                const d = await r.json();
-                
-                // ✅ استخدام نفس الشرط الذي يعمل لديك
-                if(d.result && (d.result.includes("OK") || d.result.length > 5)) {
+                // الخصم بناءً على نجاح طلب الـ HTTP
+                if(r.ok) {
                     sc++;
-                    uLimit -= info.segs; // الخصم حسب الأجزاء (1، 2، 3...)
+                    uLimit -= info.segs; // يخصم 1 أو 2 أو 3 حسب طول الرسالة
                     document.getElementById('displayLimit').innerText = uLimit;
-                    // تحديث الشيت
+                    rep += `- ${nums[i]} ✅\n`;
+                    // تحديث الجدول
                     fetch(`${SCRIPT_URL}?phone=${cPhone}&action=update&newLimit=${uLimit}`);
+                } else {
+                    rep += `- ${nums[i]} ❌\n`;
                 }
-            } catch(e) { console.error(e); }
+            } catch(e) { rep += `- ${nums[i]} ⚠️\n`; }
             await new Promise(r => setTimeout(r, 600));
         }
 
         setLoading('sendBtn', false);
-        alert(`اكتملت العملية. الإرسال الناجح: ${sc}. الخصم الكلي: ${sc * info.segs}`);
+        alert(`اكتملت العملية. الناجح: ${sc}. إجمالي الخصم: ${sc * info.segs}`);
+        notify(rep + `\n🏁 المتبقي: ${uLimit}`);
         st.innerText = "";
     };
 </script>
