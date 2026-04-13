@@ -5,348 +5,231 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سيرفر رسائل أبراج سوريا</title>
     <style>
-        :root {
-            --syria-green: #007a3d;
-            --syria-red: #ce1126;
-            --bg-dark: #0a0a0a;
-            --card-bg: rgba(30, 30, 30, 0.9);
-            --accent: #00ff80;
-            --gold: #d4af37;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url('image_1.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 15px;
-            overflow-x: hidden;
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .container {
-            width: 100%;
-            max-width: 450px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            animation: fadeInDown 0.8s ease-out;
-            backdrop-filter: blur(10px);
-        }
+        :root { --gold: #d4af37; --bg: #121212; --card: #1e1e1e; --neon: #39FF14; --green: #007a3d; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 10px; }
+        .container { width: 100%; max-width: 450px; background: var(--card); border-radius: 15px; border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .hidden { display: none !important; }
-        .header-banner {
-            background: linear-gradient(45deg, var(--syria-green), #004d26);
-            padding: 25px;
-            text-align: center;
-            border-bottom: 2px solid var(--gold);
-        }
-        .header-banner h2 { margin: 0; font-size: 24px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .sidebar {
-            background: rgba(255,255,255,0.05);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #333;
-        }
-        .user-tag { background: var(--gold); color: black; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 13px; }
-        .content { padding: 30px; }
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-item { animation: slideInUp 0.5s ease-out; animation-fill-mode: both; }
-        .animate-item:nth-child(1) { animation-delay: 0.1s; }
-        .animate-item:nth-child(2) { animation-delay: 0.2s; }
-        .animate-item:nth-child(3) { animation-delay: 0.3s; }
-        .animate-item:nth-child(4) { animation-delay: 0.4s; }
-        .animate-item:nth-child(5) { animation-delay: 0.5s; }
-        input, select, textarea {
-            width: 100%; padding: 15px; margin-bottom: 20px;
-            border-radius: 12px; border: 1px solid #444;
-            background: rgba(0,0,0,0.3); color: white;
-            box-sizing: border-box; font-size: 15px; transition: all 0.3s ease;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 10px rgba(212,175,55,0.4);
-            outline: none;
-        }
-        button {
-            width: 100%; padding: 15px; border-radius: 12px;
-            background: linear-gradient(45deg, var(--gold), #b38f2d);
-            color: black; font-weight: bold; cursor: pointer;
-            border: none; font-size: 16px; text-transform: uppercase;
-            letter-spacing: 1px; transition: all 0.4s ease; position: relative;
-        }
-        button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(212,175,55,0.5); }
-        button:active { transform: translateY(-1px); }
-        button:disabled { background: #555; cursor: not-allowed; box-shadow: none; }
-        .neon-note {
-            background: rgba(0,255,128,0.1); color: var(--accent);
-            font-size: 13px; padding: 15px; border-radius: 10px;
-            border-right: 4px solid var(--accent); margin-bottom: 25px; line-height: 1.6;
-        }
-        .switch-link { color: #ccc; cursor: pointer; font-size: 14px; transition: color 0.3s ease; }
-        .switch-link:hover { color: var(--gold); }
-        label { display: block; margin-bottom: 10px; font-size: 14px; color: #bbb; font-weight: 500; }
-        .loader {
-            display: none; position: absolute; top: 50%; left: 15px;
-            transform: translateY(-50%); width: 20px; height: 20px;
-            border: 3px solid rgba(0,0,0,0.2); border-radius: 50%;
-            border-top-color: black; animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
-        button.is-loading .loader { display: block; }
-        button.is-loading span { opacity: 0.3; }
+        .header { background: linear-gradient(45deg, var(--green), #004d26); padding: 20px; text-align: center; border-bottom: 2px solid var(--gold); }
+        .header h2 { margin: 0; color: white; }
+        .sidebar { background: #252525; padding: 15px; border-bottom: 1px solid var(--gold); display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+        .user-tag { background: var(--gold); color: black; padding: 2px 10px; border-radius: 20px; font-weight: bold; }
+        .content { padding: 25px; text-align: center; }
+        input, select, textarea, button { width: 100%; padding: 14px; margin-bottom: 14px; border-radius: 10px; border: 1px solid #444; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; font-size: 14px; outline: none; }
+        input:focus, textarea:focus { border-color: var(--gold); }
+        button { background: linear-gradient(45deg, var(--gold), #b38f2d); color: black; font-weight: bold; cursor: pointer; border: none; font-size: 15px; }
+        button:hover { opacity: 0.85; }
+        button:disabled { background: #555; cursor: not-allowed; }
+        label { display: block; text-align: right; margin-bottom: 5px; font-size: 12px; color: var(--gold); }
+        .neon-note { color: var(--neon); font-size: 12px; font-weight: bold; margin-bottom: 15px; text-align: right; border: 1px dashed var(--neon); padding: 10px; border-radius: 8px; line-height: 1.6; background: rgba(0,255,128,0.05); }
+        .switch-link { color: var(--gold); cursor: pointer; text-decoration: underline; font-size: 13px; margin: 5px; display: inline-block; }
+        .sms-info { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; font-size: 13px; margin-top: -10px; margin-bottom: 15px; display: flex; justify-content: space-between; border: 1px dashed #555; }
     </style>
 </head>
 <body>
-<div class="container" id="mainContainer">
-    <div class="header-banner">
-        <h2>سيرفير أبراج سوريا للرسائل</h2>
-    </div>
 
-    <div id="loginSection" class="section">
-        <div class="content">
-            <h3 class="animate-item" style="text-align:center;color:var(--gold);margin-bottom:25px;">تسجيل الدخول</h3>
-            <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)" class="animate-item">
-            <input type="password" id="loginPass" placeholder="كلمة المرور" class="animate-item">
-            <button id="loginBtn" onclick="login()" class="animate-item"><span>دخول</span><div class="loader"></div></button>
-            <div style="text-align:center;margin-top:20px;" class="animate-item">
-                <span class="switch-link" onclick="showView('regSection')">إنشاء حساب جديد</span>
-                <span style="color:#444"> | </span>
-                <span class="switch-link" onclick="showView('forgotSection')">نسيت السر؟</span>
-            </div>
-        </div>
+<div id="loginSection" class="container">
+    <div class="header"><h2>سيرفر أبراج سوريا</h2></div>
+    <div class="content">
+        <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
+        <input type="password" id="loginPass" placeholder="كلمة المرور">
+        <button id="loginBtn" onclick="login()">دخول</button>
+        <p>
+            <span class="switch-link" onclick="showView('regSection')">إنشاء حساب</span> |
+            <span class="switch-link" onclick="showView('forgotSection')">نسيت كلمة المرور؟</span>
+        </p>
     </div>
+</div>
 
-    <div id="forgotSection" class="section hidden">
-        <div class="content">
-            <h3 class="animate-item" style="color:var(--gold);">استعادة الحساب</h3>
-            <p style="font-size:13px;color:#aaa;margin-bottom:20px;" class="animate-item">أدخل رقمك لإرسال كود التحقق</p>
-            <input type="tel" id="forgotPhone" placeholder="9639xxxxxxxx" class="animate-item">
-            <button id="forgotBtn" onclick="sendResetOTP()" class="animate-item"><span>إرسال كود الاستعادة</span><div class="loader"></div></button>
-            <p style="text-align:center;" class="animate-item"><span class="switch-link" onclick="showView('loginSection')">رجوع</span></p>
-        </div>
+<div id="forgotSection" class="container hidden">
+    <div class="header"><h2>استعادة الحساب</h2></div>
+    <div class="content">
+        <p style="font-size:12px;color:#aaa;">أدخل رقمك المسجل لإرسال كود التحقق</p>
+        <input type="tel" id="forgotPhone" placeholder="9639xxxxxxxx">
+        <button onclick="sendResetOTP()">إرسال كود التغيير</button>
+        <p><span class="switch-link" onclick="showView('loginSection')">رجوع</span></p>
     </div>
+</div>
 
-    <div id="resetPassSection" class="section hidden">
-        <div class="content">
-            <h3 class="animate-item" style="color:var(--gold)">تغيير كلمة المرور</h3>
-            <input type="number" id="resetOtpInput" placeholder="أدخل الكود المرسل" class="animate-item">
-            <input type="password" id="newPassInput" placeholder="كلمة المرور الجديدة" class="animate-item">
-            <button id="resetBtn" onclick="verifyAndReset()" class="animate-item"><span>تحديث الآن</span><div class="loader"></div></button>
-        </div>
+<div id="resetPassSection" class="container hidden">
+    <div class="header"><h2>تغيير كلمة المرور</h2></div>
+    <div class="content">
+        <input type="text" id="resetOtpInput" placeholder="أدخل الكود" maxlength="4">
+        <input type="password" id="newPassInput" placeholder="كلمة المرور الجديدة">
+        <button onclick="verifyAndReset()">تحديث الآن</button>
     </div>
+</div>
 
-    <div id="regSection" class="section hidden">
-        <div class="content">
-            <h3 class="animate-item" style="color:var(--gold);">عضوية جديدة</h3>
-            <div class="neon-note animate-item">تأكد من كتابة الرقم بشكل صحيح لاستلام الكود</div>
-            <input type="text" id="regName" placeholder="الاسم الكامل" class="animate-item">
-            <input type="tel" id="regPhone" placeholder="9639xxxxxxxx" class="animate-item">
-            <input type="password" id="regPass" placeholder="كلمة المرور" class="animate-item">
-            <button id="regBtn" onclick="sendRegOTP()" class="animate-item"><span>إرسال كود التفعيل</span><div class="loader"></div></button>
-            <p style="text-align:center;" class="animate-item"><span class="switch-link" onclick="showView('loginSection')">لديك حساب؟ سجل دخول</span></p>
-        </div>
+<div id="regSection" class="container hidden">
+    <div class="header"><h2>عضوية جديدة</h2></div>
+    <div class="content">
+        <input type="text" id="regName" placeholder="الاسم الكامل">
+        <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
+        <input type="password" id="regPass" placeholder="كلمة المرور">
+        <button onclick="sendRegOTP()">إرسال كود التفعيل</button>
+        <p><span class="switch-link" onclick="showView('loginSection')">لديك حساب؟ دخول</span></p>
     </div>
+</div>
 
-    <div id="otpSection" class="section hidden">
-        <div class="content">
-            <h3 class="animate-item" style="color:var(--gold)">تأكيد الرقم</h3>
-            <input type="number" id="otpInput" placeholder="أدخل كود الـ OTP" class="animate-item">
-            <button id="otpBtn" onclick="verifyAndRegister()" class="animate-item"><span>تفعيل الحساب</span><div class="loader"></div></button>
-        </div>
+<div id="otpSection" class="container hidden">
+    <div class="header"><h2>تأكيد الرقم</h2></div>
+    <div class="content">
+        <input type="text" id="otpInput" placeholder="أدخل الكود" maxlength="4">
+        <button onclick="verifyAndRegister()">تفعيل الحساب</button>
     </div>
+</div>
 
-    <div id="mainApp" class="section hidden">
-        <div class="sidebar">
-            <div>مرحباً: <span id="displayName" class="user-tag">..</span></div>
-            <div>رصيدك: <b id="displayLimit" style="color:var(--gold);">0</b></div>
+<div id="mainApp" class="container hidden">
+    <div class="sidebar">
+        <div>مرحباً: <span id="displayName" class="user-tag">..</span></div>
+        <div>رصيدك: <b id="displayLimit" style="color:var(--gold);">0</b></div>
+    </div>
+    <div class="content">
+        <div class="neon-note">⚠️ الأرقام تبدأ بـ 963 بدون صفر وبدون (+)<br>مثال: 963968899922</div>
+        <label>المعرف (Sender ID):</label>
+        <select id="sid">
+            <option value="Amgad-sms">Amgad-sms (فردي وجماعي)</option>
+            <option value="ciedco-sms">ciedco-sms (فردي فقط)</option>
+            <option value="ciedco2sms">ciedco2sms (جماعي فقط)</option>
+        </select>
+        <label>أرقام المستلمين (رقم بكل سطر):</label>
+        <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
+        <label>نص الرسالة:</label>
+        <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="updateSmsInfo()"></textarea>
+        <div class="sms-info">
+            <span>الحروف: <b id="charCount">0</b></span>
+            <span>الرسائل: <b id="segCount">1</b></span>
         </div>
-        <div class="content">
-            <div class="neon-note animate-item">⚠️ الأرقام تبدأ بـ 963 بدون صفر أو (+)</div>
-            <label class="animate-item">المعرف (Sender ID):</label>
-            <select id="sid" class="animate-item">
-                <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
-                <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
-                <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
-                <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
-            </select>
-            <label class="animate-item">أرقام المستلمين (رقم بكل سطر):</label>
-            <textarea id="mno" rows="5" placeholder="963930000000&#10;963940000000" class="animate-item"></textarea>
-            <label class="animate-item">نص الرسالة:</label>
-            <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." class="animate-item"></textarea>
-            <button id="sendBtn" class="animate-item"><span>إرسال الرسائل الآن</span><div class="loader"></div></button>
-            <div id="status" style="font-size:13px;margin-top:15px;text-align:center;color:var(--accent);"></div>
-        </div>
+        <button id="sendBtn">بدء الإرسال الآن</button>
+        <div id="status" style="font-size:12px;margin-top:8px;color:var(--gold);font-weight:bold;"></div>
     </div>
 </div>
 
 <script>
-    // ✅ الـ API على السيرفر تبعك - بدون أي credentials هنا
-    const API_URL = '/sms-api';
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWd-CeGoULG8pgK32ZqCYGg9N3p8YxlB6HkEco8KTCr-CAXzrCSmxrp4hjJcMuUss/exec";
+var API = '/sms-api';
+var uLimit = 0, uName = '', cPhone = '';
 
-    let gOTP, tempUser, uLimit, uName, uCr, pCr, cPhone;
+function showView(id) {
+    var boxes = document.querySelectorAll('.container');
+    for (var i = 0; i < boxes.length; i++) boxes[i].classList.add('hidden');
+    document.getElementById(id).classList.remove('hidden');
+}
 
-    function setLoading(btnId, state) {
-        const btn = document.getElementById(btnId);
-        if(!btn) return;
-        state ? btn.classList.add('is-loading') : btn.classList.remove('is-loading');
-        btn.disabled = state;
-    }
+function updateSmsInfo() {
+    var len = document.getElementById('msg').value.length;
+    document.getElementById('charCount').innerText = len;
+    document.getElementById('segCount').innerText = len <= 70 ? 1 : Math.ceil(len / 67);
+}
 
-    function showView(id) {
-        document.querySelectorAll('.section').forEach(v => v.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-        document.getElementById(id).querySelectorAll('.animate-item').forEach(item => {
-            item.style.animation = 'none';
-            item.offsetHeight;
-            item.style.animation = null;
-        });
-    }
+function api(endpoint, data) {
+    return fetch(API + '/' + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    }).then(function(r) { return r.json(); });
+}
 
-    async function notify(text) {
-        try {
-            await fetch(`${API_URL}/notify`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text })
-            });
-        } catch(e) {}
-    }
-
-    async function login() {
-        const p = document.getElementById('loginPhone').value.trim();
-        const s = document.getElementById('loginPass').value;
-        if(!p || !s) return alert("الرجاء إدخال البيانات");
-        setLoading('loginBtn', true);
-        try {
-            const r = await fetch(`${SCRIPT_URL}?phone=${p}&pass=${s}&action=login`);
-            const d = await r.json();
-            if(d === "Wrong") { alert("خطأ في بيانات الدخول"); setLoading('loginBtn', false); return; }
-            cPhone = p; uName = d.name; uLimit = d.limit;
-            uCr = atob(d.u); pCr = atob(d.p);
+function login() {
+    var phone = document.getElementById('loginPhone').value.trim();
+    var pass = document.getElementById('loginPass').value;
+    if (!phone || !pass) return alert('أدخل البيانات');
+    document.getElementById('loginBtn').disabled = true;
+    api('login', { phone: phone, pass: pass }).then(function(d) {
+        if (!d.ok) { alert('بيانات خاطئة'); }
+        else {
+            cPhone = phone; uName = d.name; uLimit = d.limit;
             document.getElementById('displayName').innerText = uName;
             document.getElementById('displayLimit').innerText = uLimit;
             showView('mainApp');
-            notify(`🔓 دخول جديد: ${uName} (${p})`);
-        } catch(e) { alert("حدث خطأ غير متوقع"); }
-        setLoading('loginBtn', false);
-    }
-
-    async function sendResetOTP() {
-        const p = document.getElementById('forgotPhone').value.trim();
-        if(p.length < 10) return alert("أدخل رقم صحيح");
-        setLoading('forgotBtn', true);
-        gOTP = Math.floor(1000 + Math.random() * 9000);
-        cPhone = p;
-        try {
-            await fetch(`${API_URL}/send-otp`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: p, msg: `كود استعادة حساب أبراج سوريا: ${gOTP}` })
-            });
-            alert("تم إرسال الكود لهاتفك");
-            showView('resetPassSection');
-        } catch(e) { alert("فشل إرسال الكود"); }
-        setLoading('forgotBtn', false);
-    }
-
-    async function verifyAndReset() {
-        const otp = document.getElementById('resetOtpInput').value;
-        const newPass = document.getElementById('newPassInput').value;
-        if(otp == gOTP && newPass.length >= 4) {
-            setLoading('resetBtn', true);
-            const r = await fetch(`${SCRIPT_URL}?phone=${cPhone}&newPass=${newPass}&action=resetPass`);
-            const t = await r.text();
-            setLoading('resetBtn', false);
-            if(t === "Success") { alert("تم التحديث بنجاح!"); showView('loginSection'); }
-        } else { alert("الكود غير صحيح أو كلمة المرور قصيرة جداً"); }
-    }
-
-    async function sendRegOTP() {
-        const p = document.getElementById('regPhone').value.trim();
-        const n = document.getElementById('regName').value.trim();
-        const s = document.getElementById('regPass').value;
-        if(p.length !== 12 || !n) return alert("يرجى التأكد من البيانات والرقم 9639xxxxxxxx");
-        setLoading('regBtn', true);
-        gOTP = Math.floor(1000 + Math.random() * 9000);
-        tempUser = {p, n, s};
-        try {
-            await fetch(`${API_URL}/send-otp`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: p, msg: `كود تفعيل أبراج سوريا: ${gOTP}` })
-            });
-            showView('otpSection');
-        } catch(e) { alert("فشل إرسال الكود"); }
-        setLoading('regBtn', false);
-    }
-
-    async function verifyAndRegister() {
-        if(document.getElementById('otpInput').value == gOTP) {
-            setLoading('otpBtn', true);
-            const {p, n, s} = tempUser;
-            const r = await fetch(`${SCRIPT_URL}?phone=${p}&name=${n}&pass=${s}&action=register`);
-            const t = await r.text();
-            setLoading('otpBtn', false);
-            if(t === "Success") { alert("تم إنشاء الحساب بنجاح! تواصل مع الإدارة للشحن."); showView('loginSection'); }
-            else { alert("الرقم مسجل مسبقاً!"); }
-        } else { alert("الكود خطأ"); }
-    }
-
-    document.getElementById('sendBtn').onclick = async () => {
-        const mno = document.getElementById('mno').value;
-        const msg = document.getElementById('msg').value;
-        const sid = document.getElementById('sid').value;
-        const nums = mno.split(/\r?\n/).map(l => l.trim()).filter(l => l.length === 12);
-        if(nums.length === 0 || !msg) return alert("أدخل الأرقام والرسالة");
-        if(nums.length > uLimit) return alert("رصيدك غير كافٍ لإرسال هذه الكمية");
-
-        setLoading('sendBtn', true);
-        const st = document.getElementById('status');
-        st.innerText = "جاري بدء عملية الإرسال...";
-
-        let sc = 0;
-        let rep = `🚀 حملة جديدة: ${uName} (${cPhone})\nالمعرف: ${sid}\n`;
-
-        for(let i = 0; i < nums.length; i++) {
-            st.innerText = `يتم الإرسال الآن.. (${i+1}/${nums.length})`;
-            try {
-                const r = await fetch(`${API_URL}/send-sms`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mno: nums[i], msg, sid })
-                });
-                const d = await r.json();
-                if(d.result && (d.result.includes("OK") || d.result.length > 5)) {
-                    sc++; uLimit--;
-                    document.getElementById('displayLimit').innerText = uLimit;
-                    rep += `- ${nums[i]} ✅\n`;
-                    fetch(`${SCRIPT_URL}?phone=${cPhone}&action=update&newLimit=${uLimit}`);
-                } else { rep += `- ${nums[i]} ❌\n`; }
-            } catch(e) { rep += `- ${nums[i]} ⚠️ (خطأ اتصال)\n`; }
-            await new Promise(r => setTimeout(r, 600));
         }
+        document.getElementById('loginBtn').disabled = false;
+    }).catch(function() { alert('خطأ بالاتصال'); document.getElementById('loginBtn').disabled = false; });
+}
 
-        setLoading('sendBtn', false);
-        alert(`اكتملت العملية! تم إرسال ${sc} رسالة بنجاح من أصل ${nums.length}.`);
-        notify(rep + `\n🏁 المتبقي في الرصيد: ${uLimit}`);
-        st.innerText = "";
-    };
+function sendRegOTP() {
+    var phone = document.getElementById('regPhone').value.trim();
+    var name = document.getElementById('regName').value.trim();
+    var pass = document.getElementById('regPass').value;
+    if (phone.length !== 12 || !name || !pass) return alert('تأكد من البيانات');
+    api('send-reg-otp', { phone: phone, name: name, pass: pass }).then(function(d) {
+        if (d.error) return alert(d.error);
+        cPhone = phone;
+        showView('otpSection');
+    }).catch(function() { alert('خطأ'); });
+}
+
+function verifyAndRegister() {
+    var otp = document.getElementById('otpInput').value.trim();
+    if (otp.length !== 4) return alert('أدخل كود من 4 أرقام');
+    api('verify-register', { phone: cPhone, otp: otp }).then(function(d) {
+        if (d.ok) { alert('تم إنشاء حسابك! تواصل مع الإدارة للشحن.'); showView('loginSection'); }
+        else alert(d.error || 'خطأ');
+    }).catch(function() { alert('خطأ'); });
+}
+
+function sendResetOTP() {
+    var phone = document.getElementById('forgotPhone').value.trim();
+    if (phone.length < 10) return alert('أدخل رقمك');
+    api('send-reset-otp', { phone: phone }).then(function(d) {
+        if (d.error) return alert(d.error);
+        cPhone = phone;
+        showView('resetPassSection');
+    }).catch(function() { alert('خطأ'); });
+}
+
+function verifyAndReset() {
+    var otp = document.getElementById('resetOtpInput').value.trim();
+    var newPass = document.getElementById('newPassInput').value;
+    if (otp.length !== 4 || newPass.length < 4) return alert('تحقق من البيانات');
+    api('verify-reset', { phone: cPhone, otp: otp, newPass: newPass }).then(function(d) {
+        if (d.ok) { alert('تم تحديث كلمة السر!'); showView('loginSection'); }
+        else alert(d.error || 'كود خاطئ');
+    }).catch(function() { alert('خطأ'); });
+}
+
+document.getElementById('sendBtn').onclick = function() {
+    var btn = document.getElementById('sendBtn');
+    var st = document.getElementById('status');
+    var msg = document.getElementById('msg').value;
+    var sid = document.getElementById('sid').value;
+    var lines = document.getElementById('mno').value.split(/\r?\n/);
+    var nums = [];
+    for (var i = 0; i < lines.length; i++) {
+        var n = lines[i].trim();
+        if (n.length === 12) nums.push(n);
+    }
+    var segs = msg.length <= 70 ? 1 : Math.ceil(msg.length / 67);
+    var totalNeeded = nums.length * segs;
+
+    if (!nums.length || !msg) return alert('أدخل الأرقام والرسالة');
+    if (totalNeeded > uLimit) return alert('رصيدك (' + uLimit + ') لا يكفي لـ ' + totalNeeded + ' رسالة');
+
+    btn.disabled = true;
+    var sc = 0;
+    var idx = 0;
+
+    function sendNext() {
+        if (idx >= nums.length) {
+            api('notify', { text: 'حملة: ' + uName + ' - أرسل لـ ' + sc + '/' + nums.length + ' - المتبقي: ' + uLimit });
+            alert('تم الإرسال لـ ' + sc + ' رقم');
+            btn.disabled = false;
+            st.innerText = '';
+            return;
+        }
+        st.innerText = 'إرسال (' + (idx + 1) + '/' + nums.length + ')';
+        api('send-sms', { phone: cPhone, mno: nums[idx], msg: msg, sid: sid }).then(function(d) {
+            if (d.result && (String(d.result).indexOf('OK') !== -1 || String(d.result).length > 5)) {
+                sc++;
+                uLimit -= segs;
+                document.getElementById('displayLimit').innerText = uLimit;
+                api('update-limit', { phone: cPhone, newLimit: uLimit });
+            }
+        }).catch(function() {}).then(function() {
+            idx++;
+            setTimeout(sendNext, 600);
+        });
+    }
+    sendNext();
+};
 </script>
 </body>
 </html>
