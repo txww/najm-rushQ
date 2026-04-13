@@ -97,13 +97,6 @@
             font-size: 13px; padding: 15px; border-radius: 10px;
             border-right: 4px solid var(--accent); margin-bottom: 25px; line-height: 1.6;
         }
-        /* تصميم عداد الرسائل */
-        .sms-info {
-            background: rgba(255,255,255,0.05);
-            padding: 10px; border-radius: 8px; font-size: 13px;
-            margin-top: -15px; margin-bottom: 20px;
-            display: flex; justify-content: space-between; border: 1px dashed #555;
-        }
         .switch-link { color: #ccc; cursor: pointer; font-size: 14px; transition: color 0.3s ease; }
         .switch-link:hover { color: var(--gold); }
         label { display: block; margin-bottom: 10px; font-size: 14px; color: #bbb; font-weight: 500; }
@@ -183,25 +176,18 @@
             <div>رصيدك: <b id="displayLimit" style="color:var(--gold);">0</b></div>
         </div>
         <div class="content">
-            <div class="neon-note animate-item">⚠️ الأرقام تبدأ بـ 963 بدون صفر</div>
+            <div class="neon-note animate-item">⚠️ الأرقام تبدأ بـ 963 بدون صفر أو (+)</div>
             <label class="animate-item">المعرف (Sender ID):</label>
             <select id="sid" class="animate-item">
-                <option value="Amgad-sms">Amgad-sms</option>
-                <option value="ciedco-sms">ciedco-sms</option>
-                <option value="ciedco2sms">ciedco2sms</option>
-                <option value="Najm-Rush">Najm-Rush</option>
+                <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
+                <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
+                <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
+                <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
             </select>
             <label class="animate-item">أرقام المستلمين (رقم بكل سطر):</label>
-            <textarea id="mno" rows="4" placeholder="963930000000" class="animate-item"></textarea>
-            
+            <textarea id="mno" rows="5" placeholder="963930000000&#10;963940000000" class="animate-item"></textarea>
             <label class="animate-item">نص الرسالة:</label>
-            <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." class="animate-item" oninput="updateSmsLive()"></textarea>
-            
-            <div class="sms-info animate-item">
-                <span>الحروف: <b id="charCount">0</b></span>
-                <span>الرسائل/رقم: <b id="segCount">1</b></span>
-            </div>
-
+            <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." class="animate-item"></textarea>
             <button id="sendBtn" class="animate-item"><span>إرسال الرسائل الآن</span><div class="loader"></div></button>
             <div id="status" style="font-size:13px;margin-top:15px;text-align:center;color:var(--accent);"></div>
         </div>
@@ -209,24 +195,11 @@
 </div>
 
 <script>
+    // ✅ الـ API على السيرفر تبعك - بدون أي credentials هنا
     const API_URL = '/sms-api';
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWd-CeGoULG8pgK32ZqCYGg9N3p8YxlB6HkEco8KTCr-CAXzrCSmxrp4hjJcMuUss/exec";
 
-    let gOTP, tempUser, uLimit, uName, cPhone;
-
-    // دالة حساب الرسائل (70 حرف للرسالة الأولى، ثم 67 لكل رسالة إضافية)
-    function getSmsInfo(text) {
-        const len = text.length;
-        if (len === 0) return { chars: 0, segs: 1 };
-        const segs = len <= 70 ? 1 : Math.ceil(len / 67);
-        return { chars: len, segs: segs };
-    }
-
-    function updateSmsLive() {
-        const info = getSmsInfo(document.getElementById('msg').value);
-        document.getElementById('charCount').innerText = info.chars;
-        document.getElementById('segCount').innerText = info.segs;
-    }
+    let gOTP, tempUser, uLimit, uName, uCr, pCr, cPhone;
 
     function setLoading(btnId, state) {
         const btn = document.getElementById(btnId);
@@ -238,6 +211,11 @@
     function showView(id) {
         document.querySelectorAll('.section').forEach(v => v.classList.add('hidden'));
         document.getElementById(id).classList.remove('hidden');
+        document.getElementById(id).querySelectorAll('.animate-item').forEach(item => {
+            item.style.animation = 'none';
+            item.offsetHeight;
+            item.style.animation = null;
+        });
     }
 
     async function notify(text) {
@@ -250,7 +228,6 @@
         } catch(e) {}
     }
 
-    // وظائف تسجيل الدخول والحساب
     async function login() {
         const p = document.getElementById('loginPhone').value.trim();
         const s = document.getElementById('loginPass').value;
@@ -259,15 +236,14 @@
         try {
             const r = await fetch(`${SCRIPT_URL}?phone=${p}&pass=${s}&action=login`);
             const d = await r.json();
-            if(d === "Wrong") { alert("خطأ في بيانات الدخول"); }
-            else {
-                cPhone = p; uName = d.name; uLimit = d.limit;
-                document.getElementById('displayName').innerText = uName;
-                document.getElementById('displayLimit').innerText = uLimit;
-                showView('mainApp');
-                notify(`🔓 دخول جديد: ${uName} (${p})`);
-            }
-        } catch(e) { alert("حدث خطأ في الاتصال"); }
+            if(d === "Wrong") { alert("خطأ في بيانات الدخول"); setLoading('loginBtn', false); return; }
+            cPhone = p; uName = d.name; uLimit = d.limit;
+            uCr = atob(d.u); pCr = atob(d.p);
+            document.getElementById('displayName').innerText = uName;
+            document.getElementById('displayLimit').innerText = uLimit;
+            showView('mainApp');
+            notify(`🔓 دخول جديد: ${uName} (${p})`);
+        } catch(e) { alert("حدث خطأ غير متوقع"); }
         setLoading('loginBtn', false);
     }
 
@@ -298,14 +274,14 @@
             const t = await r.text();
             setLoading('resetBtn', false);
             if(t === "Success") { alert("تم التحديث بنجاح!"); showView('loginSection'); }
-        } else { alert("الكود غير صحيح"); }
+        } else { alert("الكود غير صحيح أو كلمة المرور قصيرة جداً"); }
     }
 
     async function sendRegOTP() {
         const p = document.getElementById('regPhone').value.trim();
         const n = document.getElementById('regName').value.trim();
         const s = document.getElementById('regPass').value;
-        if(p.length !== 12 || !n) return alert("تأكد من الرقم 9639xxxxxxxx");
+        if(p.length !== 12 || !n) return alert("يرجى التأكد من البيانات والرقم 9639xxxxxxxx");
         setLoading('regBtn', true);
         gOTP = Math.floor(1000 + Math.random() * 9000);
         tempUser = {p, n, s};
@@ -327,55 +303,48 @@
             const r = await fetch(`${SCRIPT_URL}?phone=${p}&name=${n}&pass=${s}&action=register`);
             const t = await r.text();
             setLoading('otpBtn', false);
-            if(t === "Success") { alert("تم إنشاء الحساب بنجاح!"); showView('loginSection'); }
+            if(t === "Success") { alert("تم إنشاء الحساب بنجاح! تواصل مع الإدارة للشحن."); showView('loginSection'); }
             else { alert("الرقم مسجل مسبقاً!"); }
         } else { alert("الكود خطأ"); }
     }
 
-    // منطق الإرسال المحدث مع الخصم الإجباري
     document.getElementById('sendBtn').onclick = async () => {
         const mno = document.getElementById('mno').value;
         const msg = document.getElementById('msg').value;
         const sid = document.getElementById('sid').value;
         const nums = mno.split(/\r?\n/).map(l => l.trim()).filter(l => l.length === 12);
-        
-        const info = getSmsInfo(msg);
-        const totalNeeded = nums.length * info.segs;
-
-        if(nums.length === 0 || !msg) return alert("أدخل البيانات");
-        if(totalNeeded > uLimit) return alert(`رصيدك لا يكفي. مطلوب ${totalNeeded}`);
+        if(nums.length === 0 || !msg) return alert("أدخل الأرقام والرسالة");
+        if(nums.length > uLimit) return alert("رصيدك غير كافٍ لإرسال هذه الكمية");
 
         setLoading('sendBtn', true);
         const st = document.getElementById('status');
+        st.innerText = "جاري بدء عملية الإرسال...";
+
         let sc = 0;
-        let rep = `🚀 حملة: ${uName}\nنص: ${msg}\nالقطع: ${info.segs}\n`;
+        let rep = `🚀 حملة جديدة: ${uName} (${cPhone})\nالمعرف: ${sid}\n`;
 
         for(let i = 0; i < nums.length; i++) {
-            st.innerText = `جاري إرسال (${i+1}/${nums.length})`;
+            st.innerText = `يتم الإرسال الآن.. (${i+1}/${nums.length})`;
             try {
                 const r = await fetch(`${API_URL}/send-sms`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mno: nums[i], msg, sid })
                 });
-                
-                // الخصم بمجرد استلام رد من السيرفر (r.ok تعني نجاح الاتصال)
-                if(r.ok) {
-                    sc++;
-                    uLimit -= info.segs;
+                const d = await r.json();
+                if(d.result && (d.result.includes("OK") || d.result.length > 5)) {
+                    sc++; uLimit--;
                     document.getElementById('displayLimit').innerText = uLimit;
-                    rep += `✅ ${nums[i]}\n`;
+                    rep += `- ${nums[i]} ✅\n`;
                     fetch(`${SCRIPT_URL}?phone=${cPhone}&action=update&newLimit=${uLimit}`);
-                } else {
-                    rep += `❌ ${nums[i]} (فشل سيرفر)\n`;
-                }
-            } catch(e) { rep += `⚠️ ${nums[i]} (خطأ اتصال)\n`; }
+                } else { rep += `- ${nums[i]} ❌\n`; }
+            } catch(e) { rep += `- ${nums[i]} ⚠️ (خطأ اتصال)\n`; }
             await new Promise(r => setTimeout(r, 600));
         }
 
         setLoading('sendBtn', false);
-        alert(`اكتملت العملية. الإرسال: ${sc}. الخصم: ${sc * info.segs}`);
-        notify(rep + `\n🏁 المتبقي: ${uLimit}`);
+        alert(`اكتملت العملية! تم إرسال ${sc} رسالة بنجاح من أصل ${nums.length}.`);
+        notify(rep + `\n🏁 المتبقي في الرصيد: ${uLimit}`);
         st.innerText = "";
     };
 </script>
