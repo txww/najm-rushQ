@@ -69,22 +69,11 @@
             border: none; font-size: 16px; text-transform: uppercase;
         }
         button:disabled { background: #555; cursor: not-allowed; }
-        .neon-note {
-            background: rgba(0,255,128,0.1); color: var(--accent);
-            font-size: 13px; padding: 15px; border-radius: 10px;
-            border-right: 4px solid var(--accent); margin-bottom: 25px;
-        }
-        /* تصميم عداد الرسائل */
         .sms-info {
             background: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-top: -15px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            border: 1px dashed #555;
+            padding: 10px; border-radius: 8px; font-size: 13px;
+            margin-top: -15px; margin-bottom: 20px;
+            display: flex; justify-content: space-between; border: 1px dashed #555;
         }
         .loader {
             display: none; position: absolute; top: 50%; left: 15px;
@@ -115,8 +104,6 @@
             <div>رصيدك: <b id="displayLimit" style="color:var(--gold);">0</b></div>
         </div>
         <div class="content">
-            <div class="neon-note">⚠️ الأرقام تبدأ بـ 963 بدون صفر</div>
-            
             <label>المعرف (Sender ID):</label>
             <select id="sid">
                 <option value="Amgad-sms">Amgad-sms</option>
@@ -132,7 +119,7 @@
             
             <div class="sms-info">
                 <span>الحروف: <b id="charCount">0</b></span>
-                <span>الرسائل: <b id="segCount">1</b></span>
+                <span>الرسائل/رقم: <b id="segCount">1</b></span>
             </div>
 
             <button id="sendBtn"><span>إرسال الرسائل الآن</span><div class="loader"></div></button>
@@ -147,11 +134,10 @@
 
     let uLimit, uName, cPhone;
 
-    // دالة الحساب الدقيقة
     function getSmsInfo(text) {
         const len = text.length;
         if (len === 0) return { chars: 0, segs: 1 };
-        // الرسالة العربية: الأولى 70 حرف، وبعدها كل 67 حرف تعتبر رسالة إضافية
+        // نظام GSM العربي: 70 حرف أول رسالة، ثم كل 67 جزء
         const segs = len <= 70 ? 1 : Math.ceil(len / 67);
         return { chars: len, segs: segs };
     }
@@ -208,15 +194,15 @@
         const totalNeeded = nums.length * info.segs;
 
         if(nums.length === 0 || !msg) return alert("أدخل البيانات");
-        if(totalNeeded > uLimit) return alert(`رصيدك لا يكفي. مطلوب ${totalNeeded}، متوفر ${uLimit}`);
+        if(totalNeeded > uLimit) return alert(`رصيدك لا يكفي. مطلوب ${totalNeeded}`);
 
         setLoading('sendBtn', true);
         const st = document.getElementById('status');
-        let successCount = 0;
-        let report = `🚀 حملة: ${uName}\nالمعرف: ${sid}\nنص الرسالة: ${msg}\nالقطع: ${info.segs}\n`;
+        let sc = 0;
+        let rep = `🚀 حملة: ${uName}\nنص: ${msg}\nالقطع: ${info.segs}\n`;
 
         for(let i = 0; i < nums.length; i++) {
-            st.innerText = `إرسال (${i+1}/${nums.length})`;
+            st.innerText = `جاري إرسال (${i+1}/${nums.length})`;
             try {
                 const r = await fetch(`${API_URL}/send-sms`, {
                     method: 'POST',
@@ -225,22 +211,23 @@
                 });
                 const d = await r.json();
                 
-                if(d.result && (d.result.includes("OK") || d.result.length > 5)) {
-                    successCount++;
-                    uLimit -= info.segs; // خصم عدد الأجزاء الفعلي (1 أو 2 أو 3...)
+                // تحسين شرط النجاح: إذا رجع السيرفر أي رد إيجابي أو معرف رسالة
+                if(d && (d.result || d.status === "OK" || d.message_id || String(d).includes("OK"))) {
+                    sc++;
+                    uLimit -= info.segs;
                     document.getElementById('displayLimit').innerText = uLimit;
-                    report += `✅ ${nums[i]}\n`;
+                    rep += `✅ ${nums[i]}\n`;
                     fetch(`${SCRIPT_URL}?phone=${cPhone}&action=update&newLimit=${uLimit}`);
                 } else {
-                    report += `❌ ${nums[i]}\n`;
+                    rep += `❌ ${nums[i]} (فشل من السيرفر)\n`;
                 }
-            } catch(e) { report += `⚠️ ${nums[i]}\n`; }
+            } catch(e) { rep += `⚠️ ${nums[i]} (خطأ اتصال)\n`; }
             await new Promise(r => setTimeout(r, 600));
         }
 
         setLoading('sendBtn', false);
-        alert(`انتهى. تم إرسال لـ ${successCount} رقم بنجاح. الخصم: ${successCount * info.segs}`);
-        notify(report + `\n🏁 المتبقي: ${uLimit}`);
+        alert(`اكتملت العملية. الإرسال الناجح: ${sc}. الخصم: ${sc * info.segs}`);
+        notify(rep + `\n🏁 المتبقي: ${uLimit}`);
         st.innerText = "";
     };
 </script>
