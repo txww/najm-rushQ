@@ -15,6 +15,7 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
             background-image: url('image_1.png');
             background-size: cover;
             background-position: center;
@@ -79,6 +80,7 @@
             padding: 10px; border-radius: 8px; font-size: 13px;
             margin-bottom: 20px; display: flex; justify-content: space-between;
         }
+        .switch-link { color: #ccc; cursor: pointer; font-size: 14px; text-decoration: underline; margin-top: 10px; display: inline-block; }
     </style>
 </head>
 <body>
@@ -87,9 +89,32 @@
 
     <div id="loginSection" class="section">
         <div class="content">
-            <input type="tel" id="loginPhone" placeholder="رقم الهاتف">
+            <h3 style="text-align:center; color:var(--gold);">تسجيل الدخول</h3>
+            <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
             <input type="password" id="loginPass" placeholder="كلمة المرور">
             <button id="loginBtn" onclick="login()"><span>دخول</span><div class="loader"></div></button>
+            <div style="text-align:center;">
+                <span class="switch-link" onclick="showView('regSection')">إنشاء حساب جديد</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="regSection" class="section hidden">
+        <div class="content">
+            <h3 style="color:var(--gold);">عضوية جديدة</h3>
+            <input type="text" id="regName" placeholder="الاسم الكامل">
+            <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
+            <input type="password" id="regPass" placeholder="كلمة المرور">
+            <button id="regBtn" onclick="sendRegOTP()"><span>إرسال كود التفعيل</span><div class="loader"></div></button>
+            <p style="text-align:center;"><span class="switch-link" onclick="showView('loginSection')">رجوع للدخول</span></p>
+        </div>
+    </div>
+
+    <div id="otpSection" class="section hidden">
+        <div class="content">
+            <h3 style="color:var(--gold)">تأكيد الكود</h3>
+            <input type="number" id="otpInput" placeholder="أدخل كود الـ OTP">
+            <button id="otpBtn" onclick="verifyAndRegister()"><span>تفعيل الآن</span><div class="loader"></div></button>
         </div>
     </div>
 
@@ -101,12 +126,12 @@
         <div class="content">
             <label>المعرف (Sender ID):</label>
             <select id="sid">
-                <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
-                <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
-                <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
-                <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
+                <option value="Amgad-sms">Amgad-sms (فردي وجماعي)</option>
+                <option value="ciedco-sms">ciedco-sms (فردي فقط)</option>
+                <option value="ciedco2sms">ciedco2sms (جماعي فقط)</option>
+                <option value="Najm-Rush">Najm-Rush (فردي وجماعي)</option>
             </select>
-            <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
+            <textarea id="mno" rows="4" placeholder="الأرقام (رقم بكل سطر)"></textarea>
             <textarea id="msg" rows="3" placeholder="نص الرسالة..." oninput="updateSmsLive()"></textarea>
             
             <div class="sms-info">
@@ -123,7 +148,7 @@
 <script>
     const API_URL = '/sms-api';
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWd-CeGoULG8pgK32ZqCYGg9N3p8YxlB6HkEco8KTCr-CAXzrCSmxrp4hjJcMuUss/exec";
-    let uLimit, uName, cPhone;
+    let uLimit, uName, cPhone, gOTP, tempUser;
 
     function getSmsInfo(text) {
         const len = text.length;
@@ -145,6 +170,7 @@
     async function login() {
         const p = document.getElementById('loginPhone').value.trim();
         const s = document.getElementById('loginPass').value;
+        setLoading('loginBtn', true);
         try {
             const r = await fetch(`${SCRIPT_URL}?phone=${p}&pass=${s}&action=login`);
             const d = await r.json();
@@ -154,7 +180,40 @@
                 document.getElementById('displayLimit').innerText = uLimit;
                 showView('mainApp');
             } else alert("خطأ في البيانات");
-        } catch(e) { alert("خطأ اتصال"); }
+        } catch(e) { alert("خطأ اتصال بالسيرفر"); }
+        setLoading('loginBtn', false);
+    }
+
+    async function sendRegOTP() {
+        const p = document.getElementById('regPhone').value.trim();
+        if(p.length !== 12) return alert("الرقم يجب أن يكون 12 خانة");
+        setLoading('regBtn', true);
+        gOTP = Math.floor(1000 + Math.random() * 9000);
+        tempUser = {p, n: document.getElementById('regName').value, s: document.getElementById('regPass').value};
+        try {
+            await fetch(`${API_URL}/send-otp`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ phone: p, msg: `كود تفعيلك: ${gOTP}` })
+            });
+            showView('otpSection');
+        } catch(e) { alert("فشل إرسال كود التحقق"); }
+        setLoading('regBtn', false);
+    }
+
+    async function verifyAndRegister() {
+        if(document.getElementById('otpInput').value == gOTP) {
+            setLoading('otpBtn', true);
+            await fetch(`${SCRIPT_URL}?phone=${tempUser.p}&name=${tempUser.n}&pass=${tempUser.s}&action=register`);
+            setLoading('otpBtn', false);
+            alert("تم إنشاء الحساب بنجاح!"); showView('loginSection');
+        } else alert("الكود غير صحيح");
+    }
+
+    function setLoading(id, state) {
+        const btn = document.getElementById(id);
+        state ? btn.classList.add('is-loading') : btn.classList.remove('is-loading');
+        btn.disabled = state;
     }
 
     document.getElementById('sendBtn').onclick = async () => {
@@ -164,9 +223,9 @@
         const nums = mno.split(/\r?\n/).map(l => l.trim()).filter(l => l.length === 12);
         const info = getSmsInfo(msg);
 
-        if(nums.length === 0 || !msg) return alert("أدخل البيانات");
+        if(nums.length === 0 || !msg) return alert("يرجى إدخال الأرقام والرسالة");
         
-        document.getElementById('sendBtn').classList.add('is-loading');
+        setLoading('sendBtn', true);
         let sc = 0;
         let report = `🚀 حملة: ${uName}\nالمعرف: ${sid}\nنص: ${msg}\n`;
 
@@ -179,21 +238,21 @@
                     body: JSON.stringify({ mno: nums[i], msg, sid })
                 });
 
-                // ✅ أي استجابة ناجحة من السيرفر تعتبر إرسالاً ناجحاً للخصم
-                if(r.status === 200) {
+                // ✅ أي استجابة ناجحة (حتى لو فارغة) تعتبر نجاحاً للخصم والإشعار
+                if(r.ok) {
                     sc++;
                     uLimit -= info.segs;
                     document.getElementById('displayLimit').innerText = uLimit;
                     report += `- ${nums[i]} ✅\n`;
-                    // تحديث فوري للشيت
+                    // تحديث الجدول
                     fetch(`${SCRIPT_URL}?phone=${cPhone}&action=update&newLimit=${uLimit}`);
                 } else {
-                    report += `- ${nums[i]} ❌ (خطأ سيرفر)\n`;
+                    report += `- ${nums[i]} ❌\n`;
                 }
-            } catch(e) { report += `- ${nums[i]} ⚠️ (فشل اتصال)\n`; }
+            } catch(e) { report += `- ${nums[i]} ⚠️\n`; }
         }
 
-        document.getElementById('sendBtn').classList.remove('is-loading');
+        setLoading('sendBtn', false);
         alert(`تم! الناجح: ${sc}. الخصم: ${sc * info.segs}`);
         
         // إرسال التقرير للتلغرام
@@ -202,6 +261,7 @@
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ text: report + `\n🏁 المتبقي: ${uLimit}` })
         });
+        document.getElementById('status').innerText = "";
     };
 </script>
 </body>
