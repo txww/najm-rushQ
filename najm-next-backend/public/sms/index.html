@@ -139,12 +139,14 @@
             <div>رصيدك: <b id="displayLimit" style="color:var(--gold);">0</b></div>
         </div>
         <div class="content">
+            <label>المعرف (Sender ID):</label>
             <select id="sid">
-                <option value="Amgad-sms">Amgad-sms</option>
-                <option value="Najm-Rush">Najm-Rush</option>
-                <option value="ciedco-sms">ciedco-sms</option>
+                <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
+                <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
+                <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
+                <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
             </select>
-            <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
+            <textarea id="mno" rows="4" placeholder="9639xxxxxxxx (رقم بكل سطر)"></textarea>
             <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="updateSmsLive()"></textarea>
             
             <div class="sms-info">
@@ -188,7 +190,6 @@
         document.getElementById(id).classList.remove('hidden');
     }
 
-    // --- وظائف الحساب ---
     async function login() {
         const p = document.getElementById('loginPhone').value.trim();
         const s = document.getElementById('loginPass').value;
@@ -203,13 +204,12 @@
                 document.getElementById('displayLimit').innerText = uLimit;
                 showView('mainApp');
             }
-        } catch(e) { alert("خطأ في السيرفر"); }
+        } catch(e) { alert("خطأ اتصال"); }
         setLoading('loginBtn', false);
     }
 
     async function sendRegOTP() {
         const p = document.getElementById('regPhone').value.trim();
-        if(p.length !== 12) return alert("الرقم خطأ");
         setLoading('regBtn', true);
         gOTP = Math.floor(1000 + Math.random() * 9000);
         tempUser = {p, n: document.getElementById('regName').value, s: document.getElementById('regPass').value};
@@ -233,7 +233,6 @@
         } else alert("الكود خطأ");
     }
 
-    // --- وظيفة الإرسال والخصم المضمون ---
     document.getElementById('sendBtn').onclick = async () => {
         const mno = document.getElementById('mno').value;
         const msg = document.getElementById('msg').value;
@@ -248,7 +247,7 @@
 
         setLoading('sendBtn', true);
         let sc = 0;
-        let report = `🚀 حملة: ${uName}\n`;
+        let report = `🚀 حملة: ${uName}\nالمعرف: ${sid}\nنص: ${msg}\nالقطع: ${info.segs}\n`;
 
         for(let i = 0; i < nums.length; i++) {
             document.getElementById('status').innerText = `جاري الإرسال (${i+1}/${nums.length})`;
@@ -259,14 +258,14 @@
                     body: JSON.stringify({ mno: nums[i], msg, sid })
                 });
 
-                // ✅ تعديل جوهري: نعتمد على نجاح استلام الطلب من السيرفر (r.ok) وليس نص الرد
                 if(r.ok) {
                     sc++;
                     uLimit -= info.segs;
                     document.getElementById('displayLimit').innerText = uLimit;
                     report += `- ${nums[i]} ✅\n`;
-                    // تحديث الجدول فوراً
                     fetch(`${SCRIPT_URL}?phone=${cPhone}&action=update&newLimit=${uLimit}`);
+                } else {
+                    report += `- ${nums[i]} ❌\n`;
                 }
             } catch(e) { report += `- ${nums[i]} ⚠️\n`; }
             await new Promise(res => setTimeout(res, 600));
@@ -274,16 +273,15 @@
 
         setLoading('sendBtn', false);
         alert(`تم! الناجح: ${sc}. الخصم: ${sc * info.segs}`);
-        document.getElementById('status').innerText = "";
         
-        // إرسال تقرير تلغرام
+        // إرسال التقرير الكامل للتلغرام كما طلبت
         fetch(`${API_URL}/notify`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ text: report + `🏁 المتبقي: ${uLimit}` })
+            body: JSON.stringify({ text: report + `\n🏁 المتبقي: ${uLimit}` })
         });
+        document.getElementById('status').innerText = "";
     };
 </script>
 </body>
 </html>
-
