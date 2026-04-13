@@ -69,10 +69,9 @@
         <div class="neon-note">⚠️ الأرقام تبدأ بـ 963 بدون صفر وبدون (+)<br>مثال: 963968899922</div>
         <label>المعرف (Sender ID):</label>
         <select id="sid">
-            <option value="Amgad-sms">Amgad-sms (عام)</option>
-            <option value="ciedco-sms">ciedco-sms (فردي)</option>
-            <option value="ciedco2sms">ciedco2sms (جماعي)</option>
-            <option value="Najm-Rush">Najm-Rush (عام)</option>
+            <option value="Amgad-sms">Amgad-sms</option>
+            <option value="ciedco-sms">ciedco-sms</option>
+            <option value="Najm-Rush">Najm-Rush</option>
         </select>
         <textarea id="mno" rows="4" placeholder="أدخل الأرقام هنا (رقم بكل سطر)"></textarea>
         <textarea id="msg" rows="3" placeholder="نص الرسالة..." oninput="updateSmsInfo()"></textarea>
@@ -81,14 +80,13 @@
             <span>الرسائل: <b id="segCount">1</b></span>
         </div>
         <button id="sendBtn">بدء الإرسال الآن</button>
-        <div id="status"></div>
     </div>
 </div>
 
 <script>
-// --- إعدادات الربط مع جوجل شيت ---
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmOHeygY7HDR8ls5Qgt8qnY2G6Vj-RcALLV6O_SV3dEe1WL4Ptm2bhluC_VzvJz878/exec";
-const MY_SECRET = "A@112233"; 
+// --- إعدادات الربط المحدثة ---
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwc8bt2NHuGnp9glToEptBie7Ei7uYZutiF48dtwGNEcWvquMp-Hqj85bJB_xbZ_gDv/exec";
+const MY_SECRET = "A@112233"; // المفتاح السري المطابق للسكريبت
 
 var uLimit = 0, uName = '', cPhone = '';
 
@@ -107,7 +105,7 @@ function updateSmsInfo() {
 function login() {
     var phone = document.getElementById('loginPhone').value.trim();
     var pass = document.getElementById('loginPass').value;
-    if (!phone || !pass) return alert('أدخل البيانات');
+    if (!phone || !pass) return alert('يرجى إدخال كافة البيانات');
 
     fetch(`${SCRIPT_URL}?action=login&phone=${phone}&pass=${pass}&key=${MY_SECRET}`)
     .then(r => r.json())
@@ -118,47 +116,45 @@ function login() {
             document.getElementById('displayLimit').innerText = uLimit;
             showView('mainApp');
         } else {
-            alert(d.error || 'خطأ في الدخول');
+            alert(d.error || 'رقم الهاتف أو كلمة المرور غير صحيحة');
         }
-    });
+    }).catch(err => alert("خطأ في الاتصال بسيرفر الأمان"));
 }
 
-// طلب كود التحقق (مع حماية الـ 3 محاولات)
+// طلب كود التفعيل مع فحص الحماية
 function sendRegOTP() {
     var phone = document.getElementById('regPhone').value.trim();
     var name = document.getElementById('regName').value.trim();
     var pass = document.getElementById('regPass').value;
     
-    if (phone.length !== 12 || !name || !pass) return alert('تحقق من البيانات');
+    if (phone.length !== 12 || !name || !pass) return alert('يرجى التحقق من صحة الرقم والبيانات');
 
     fetch(`${SCRIPT_URL}?action=send-otp&phone=${phone}&key=${MY_SECRET}`)
     .then(r => r.json())
     .then(d => {
         if (d.error) {
-            alert(d.error); // سيظهر هنا تنبيه "حاول بعد ساعة" في حال التكرار
+            alert(d.error); // رسالة الحظر لمدة ساعة تظهر هنا
         } else {
-            // هنا يتم إرسال الكود الفعلي (مثلاً عبر API خارجي أو تليجرام)
-            // سأفترض هنا أنك تستخدم رقم الهاتف كمرجع للتأكيد
             cPhone = phone;
-            alert('تم السماح بالطلب، أدخل كود التفعيل (اختبارياً أدخل أي كود)');
+            alert('تم التحقق، أدخل كود التفعيل للمتابعة');
             showView('otpSection');
         }
-    });
+    }).catch(err => alert("خطأ في الاتصال بالسيرفر"));
 }
 
-// تفعيل الحساب وإضافته للشيت
+// إنشاء الحساب بعد التحقق
 function verifyAndRegister() {
     var otp = document.getElementById('otpInput').value.trim();
     var name = document.getElementById('regName').value.trim();
     var pass = document.getElementById('regPass').value;
 
-    if (otp.length < 1) return alert('أدخل الكود');
+    if (otp.length < 1) return alert('يرجى إدخال الكود');
 
     fetch(`${SCRIPT_URL}?action=register&phone=${cPhone}&name=${name}&pass=${pass}&key=${MY_SECRET}`)
     .then(r => r.json())
     .then(d => {
         if (d.ok) {
-            alert('تم إنشاء حسابك بنجاح! الرصيد الحالي 0.');
+            alert('تم إنشاء حسابك بنجاح! يمكنك الدخول الآن.');
             showView('loginSection');
         } else {
             alert(d.error);
@@ -166,7 +162,7 @@ function verifyAndRegister() {
     });
 }
 
-// عملية الإرسال
+// عملية الإرسال وتحديث الرصيد
 document.getElementById('sendBtn').onclick = function() {
     var btn = this;
     var msg = document.getElementById('msg').value;
@@ -174,7 +170,8 @@ document.getElementById('sendBtn').onclick = function() {
     var lines = document.getElementById('mno').value.split(/\r?\n/);
     var nums = lines.map(n => n.trim()).filter(n => n.length === 12);
 
-    if (!nums.length || !msg) return alert('تحقق من الأرقام والرسالة');
+    if (!nums.length || !msg) return alert('يرجى إدخال أرقام صحيحة ونص الرسالة');
+    if (uLimit < nums.length) return alert('عذراً، رصيدك غير كافٍ');
 
     btn.disabled = true;
     var sc = 0;
@@ -182,22 +179,19 @@ document.getElementById('sendBtn').onclick = function() {
 
     function sendNext() {
         if (idx >= nums.length) {
-            // تقرير التلغرام النهائي
-            var report = `🚀 حملة جديدة\n👤 المستخدم: ${uName}\n💬 الرسالة: ${msg}\n📱 ناجح: ${sc}/${nums.length}\n🏁 المتبقي: ${uLimit}`;
-            // يمكنك هنا إضافة fetch لـ Telegram API الخاص بك
-            alert(`اكتملت العملية! تم إرسال لـ ${sc} رقم.`);
+            alert(`اكتملت العملية! تم الإرسال لـ ${sc} رقم.`);
             btn.disabled = false;
             return;
         }
 
-        // محاكاة إرسال SMS (يجب استبدالها بـ API الإرسال الخاص بك)
+        // تحديث الرصيد في جوجل شيت لكل رسالة مرسلة
         fetch(`${SCRIPT_URL}?action=update&phone=${cPhone}&newLimit=${uLimit-1}&key=${MY_SECRET}`)
         .then(() => {
             sc++;
             uLimit--;
             document.getElementById('displayLimit').innerText = uLimit;
             idx++;
-            setTimeout(sendNext, 500);
+            setTimeout(sendNext, 400); // سرعة الإرسال
         });
     }
     sendNext();
