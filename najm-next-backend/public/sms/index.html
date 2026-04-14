@@ -3,35 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيرفر أبراج سوريا | VIP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <title>سيرفر أبراج سوريا | النسخة الاحترافية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #0a0a0a; --card: rgba(30, 30, 30, 0.9); --neon: #39FF14; }
-        body { font-family: 'Cairo', sans-serif; background: #000; color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; }
-        .container { width: 100%; max-width: 480px; background: var(--card); border-radius: 20px; border: 1px solid var(--gold); overflow: hidden; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        :root { 
+            --gold: #d4af37; 
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --bg: #0d0d0d; 
+            --card: rgba(25, 25, 25, 0.95); 
+            --neon-green: #39FF14; 
+        }
+
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); 
+            color: #f0f0f0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 15px;
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 460px; 
+            background: var(--card); 
+            border-radius: 25px; 
+            border: 1px solid var(--gold); 
+            overflow: hidden; 
+            backdrop-filter: blur(10px); 
+            box-shadow: 0 15px 50px rgba(0,0,0,0.9);
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .hidden { display: none !important; }
-        .header { background: linear-gradient(135deg, var(--gold) 0%, #8a6d3b 100%); padding: 25px; text-align: center; }
-        .header h2 { margin: 0; color: #000; font-size: 22px; font-weight: 800; }
-        .sidebar { background: rgba(0,0,0,0.5); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; }
-        .user-tag { background: var(--gold); color: #000; padding: 2px 12px; border-radius: 50px; font-weight: bold; font-size: 13px; }
-        .content { padding: 25px; }
-        label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--gold); }
-        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 18px; border-radius: 10px; border: 1px solid #333; background: #1a1a1a; color: #fff; font-size: 14px; outline: none; box-sizing: border-box; }
-        input:focus, textarea:focus { border-color: var(--gold); }
-        button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: linear-gradient(45deg, var(--gold), #f2d06b); color: #000; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .sms-info { display: flex; justify-content: space-between; font-size: 12px; margin-top: -12px; margin-bottom: 15px; color: #aaa; }
+
+        .header { 
+            background: linear-gradient(135deg, #d4af37 0%, #b38f2d 100%); 
+            padding: 30px 20px; 
+            text-align: center; 
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+        }
+
+        .header h2 { margin: 0; color: #000; font-size: 24px; font-weight: 900; text-shadow: 0 1px 2px rgba(255,255,255,0.3); }
+
+        .sidebar { 
+            background: rgba(0,0,0,0.3); 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #333;
+        }
+
+        .user-tag { background: var(--gold); color: #000; padding: 3px 15px; border-radius: 50px; font-weight: bold; font-size: 13px; box-shadow: 0 0 10px var(--gold-glow); }
+
+        .content { padding: 30px; }
+
+        label { display: block; margin-bottom: 10px; font-size: 13px; color: var(--gold); font-weight: bold; text-align: right; }
+
+        input, select, textarea { 
+            width: 100%; 
+            padding: 14px; 
+            margin-bottom: 20px; 
+            border-radius: 12px; 
+            border: 1px solid #333; 
+            background: rgba(255,255,255,0.03); 
+            color: #fff; 
+            font-size: 15px; 
+            outline: none; 
+            box-sizing: border-box; 
+            transition: 0.3s;
+        }
+
+        input:focus, textarea:focus { border-color: var(--gold); background: rgba(255,255,255,0.07); }
+
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 12px; 
+            border: none; 
+            background: linear-gradient(45deg, var(--gold), #f2d06b); 
+            color: #000; 
+            font-weight: 800; 
+            font-size: 16px; 
+            cursor: pointer; 
+            box-shadow: 0 4px 15px var(--gold-glow);
+            transition: 0.4s;
+        }
+
+        button:hover { transform: scale(1.02); opacity: 0.95; }
+        button:active { transform: scale(0.98); }
+
+        .sms-info { 
+            display: flex; 
+            justify-content: space-between; 
+            font-size: 12px; 
+            margin-top: -15px; 
+            margin-bottom: 20px; 
+            color: #888; 
+            padding: 0 5px;
+        }
+
+        .switch-link { color: var(--gold); cursor: pointer; text-decoration: none; font-size: 13px; font-weight: bold; }
+        .switch-link:hover { text-decoration: underline; }
+
+        #status { text-align: center; font-size: 13px; margin-top: 15px; color: var(--gold); font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div id="mainApp" class="container">
-    <div class="header"><h2>لوحة تحكم أبراج سوريا</h2></div>
+<div id="loginSection" class="container">
+    <div class="header"><h2>سيرفر أبراج سوريا</h2></div>
+    <div class="content">
+        <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
+        <input type="password" id="loginPass" placeholder="كلمة المرور">
+        <button id="loginBtn" onclick="login()">دخول للمنصة</button>
+        <p style="text-align:center; margin-top:20px;">
+            <span class="switch-link" onclick="showView('regSection')">طلب اشتراك جديد</span>
+        </p>
+    </div>
+</div>
+
+<div id="mainApp" class="container hidden">
     <div class="sidebar">
-        <div>المستخدم: <span id="displayName" class="user-tag">أمجد مريم</span></div>
-        <div>الرصيد: <b id="displayLimit" style="color:var(--neon);">500</b></div>
+        <div>المستخدم: <span id="displayName" class="user-tag">..</span></div>
+        <div>الرصيد: <b id="displayLimit" style="color:var(--neon-green);">0</b></div>
     </div>
     <div class="content">
-        <label>اختيار المعرف (Sender ID):</label>
+        <label>المعرف (Sender ID):</label>
         <select id="sid">
             <option value="Amgad-sms">Amgad-sms (فردي + جماعي) ✅</option>
             <option value="ciedco-sms">ciedco-sms (رسائل فردية فقط) 👤</option>
@@ -39,8 +143,8 @@
             <option value="Najm-Rush">Najm-Rush (فردي + جماعي) ✅</option>
         </select>
 
-        <label>أرقام المستلمين (رقم بكل سطر):</label>
-        <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
+        <label>أرقام المستلمين (9639...):</label>
+        <textarea id="mno" rows="4" placeholder="رقم في كل سطر"></textarea>
 
         <label>نص الرسالة:</label>
         <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="updateSmsInfo()"></textarea>
@@ -50,46 +154,91 @@
             <span>الأجزاء: <b id="segCount">1</b></span>
         </div>
 
-        <button id="sendBtn">إرسال الحملة الآن</button>
-        <div id="status" style="text-align:center; margin-top:10px; color:var(--gold); font-size:13px;"></div>
+        <button id="sendBtn" onclick="startCampaign()">إرسال الحملة الآن</button>
+        <div id="status"></div>
+    </div>
+</div>
+
+<div id="regSection" class="container hidden">
+    <div class="header"><h2>عضوية VIP جديدة</h2></div>
+    <div class="content">
+        <input type="text" id="regName" placeholder="الاسم الكامل">
+        <input type="tel" id="regPhone" placeholder="رقم الهاتف">
+        <input type="password" id="regPass" placeholder="كلمة المرور المطلوبة">
+        <button onclick="register()">إرسال طلب التفعيل</button>
+        <p style="text-align:center; margin-top:20px;">
+            <span class="switch-link" onclick="showView('loginSection')">رجوع لتسجيل الدخول</span>
+        </p>
     </div>
 </div>
 
 <script>
-    var API = 'https://script.google.com/macros/s/AKfycbzWp3FLq4WwlOgKRg82qOOolm2k78KfjZw3W2lIBi1hY_YITLw5StUkW26iAjY4V5kH/exec';
+    // الرابط الجديد الخاص بك
+    const API = 'https://script.google.com/macros/s/AKfycbxzx97kXSKP1FkpzbG-NG16B47FftakDSljc0sl35WvBlLXuSASZm_lgSokZFdSHQ1d/exec';
+
+    function showView(id) {
+        document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    function notifyTG(text) {
+        fetch(API + '?endpoint=notify', {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ text: text })
+        });
+    }
+
+    function login() {
+        const phone = document.getElementById('loginPhone').value.trim();
+        if(!phone) return alert('يرجى إدخال الرقم');
+
+        // تنبيه تلغرام عند محاولة الدخول
+        notifyTG(`🔑 *دخول للمنصة*\n📱 الرقم: ${phone}\n🕒 الوقت: ${new Date().toLocaleTimeString('ar-SY')}`);
+        
+        document.getElementById('displayName').innerText = phone;
+        document.getElementById('displayLimit').innerText = "1500"; // رصيد افتراضي
+        showView('mainApp');
+    }
+
+    function register() {
+        const name = document.getElementById('regName').value;
+        const phone = document.getElementById('regPhone').value;
+        if(!name || !phone) return alert('أكمل البيانات');
+
+        // تنبيه تلغرام عند طلب اشتراك
+        notifyTG(`📝 *طلب تسجيل جديد*\n👤 الاسم: ${name}\n📱 الرقم: ${phone}`);
+        alert('تم إرسال طلبك بنجاح، سيتم التواصل معك للتفعيل');
+        showView('loginSection');
+    }
 
     function updateSmsInfo() {
-        var len = document.getElementById('msg').value.length;
+        const len = document.getElementById('msg').value.length;
         document.getElementById('charCount').innerText = len;
         document.getElementById('segCount').innerText = len <= 70 ? 1 : Math.ceil(len / 67);
     }
 
-    document.getElementById('sendBtn').onclick = function() {
-        var btn = document.getElementById('sendBtn');
-        var msg = document.getElementById('msg').value;
-        var sid = document.getElementById('sid').value;
-        var lines = document.getElementById('mno').value.split(/\r?\n/);
-        var nums = lines.filter(n => n.trim().length === 12);
-
-        if (!nums.length || !msg) return alert('أدخل بيانات صحيحة');
-
-        btn.disabled = true;
-        document.getElementById('status').innerText = '🚀 جاري إرسال التقرير لتلغرام...';
-
-        var reportText = `🚀 *حملة جديدة* \n👤 المرسل: أمجد مريم \n🆔 المعرف: ${sid} \n💬 الرسالة: ${msg} \n📱 الأرقام: ${nums.length}`;
-
-        fetch(API + '?endpoint=notify', {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ text: reportText })
-        }).then(() => {
-            document.getElementById('status').innerText = '✅ تم الإرسال والتوثيق بنجاح';
-            setTimeout(() => { btn.disabled = false; }, 2000);
-        }).catch(() => {
-            alert('خطأ في الاتصال');
-            btn.disabled = false;
-        });
-    };
+    function startCampaign() {
+        const msg = document.getElementById('msg').value;
+        const sid = document.getElementById('sid').value;
+        const nums = document.getElementById('mno').value.split('\n').filter(n => n.trim().length >= 10);
+        
+        if(!msg || nums.length === 0) return alert('يرجى إدخال الأرقام والرسالة');
+        
+        document.getElementById('sendBtn').disabled = true;
+        document.getElementById('status').innerText = '🚀 جاري المعالجة وإرسال التقرير...';
+        
+        const report = `🚀 *حملة إرسال جديدة*\n👤 المستخدم: ${document.getElementById('displayName').innerText}\n🆔 السندر: ${sid}\n💬 الرسالة: ${msg}\n📱 عدد الأرقام: ${nums.length}`;
+        
+        notifyTG(report);
+        
+        setTimeout(() => {
+            alert('تم إطلاق الحملة بنجاح! راقب تلغرام للتحديثات.');
+            document.getElementById('sendBtn').disabled = false;
+            document.getElementById('status').innerText = '';
+        }, 1500);
+    }
 </script>
+
 </body>
 </html>
