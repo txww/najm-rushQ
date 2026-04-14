@@ -3,117 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abraj Syria - Elite</title>
+    <title>سيرفر رسائل أبراج سوريا - النسخة الفاخرة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #c5a059; --bg: #0a0a0b; --card: #141416; --accent: #00ff88; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: #eaeaeb; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; }
-        .app-container { width: 100%; max-width: 420px; background: var(--card); border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 28px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); overflow: hidden; }
+        :root { --gold: #d4af37; --bg: #0d0d0d; --card: #1a1a1a; --neon: #39FF14; --green: #007a3d; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 10px; }
+        .container { width: 100%; max-width: 450px; background: var(--card); border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.3); overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.8); transition: 0.3s; }
         .hidden { display: none !important; }
-        .header { background: linear-gradient(135deg, #0d2e1f, #050505); padding: 35px 20px; text-align: center; border-bottom: 2px solid var(--gold); }
-        .header h2 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1px; color: var(--gold); }
-        .status-bar { background: #1c1c1e; padding: 12px 20px; display: flex; justify-content: space-between; font-size: 13px; border-bottom: 1px solid #2c2c2e; }
-        .user-pill { color: var(--gold); font-weight: 700; background: rgba(197, 160, 89, 0.1); padding: 2px 10px; border-radius: 20px; }
-        .form-body { padding: 25px; }
-        input, select, textarea { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 14px; border: 1px solid #2c2c2e; background: #0a0a0a; color: #fff; box-sizing: border-box; outline: none; transition: 0.3s; font-family: 'Cairo'; }
-        input:focus { border-color: var(--gold); }
-        button { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--gold); color: #000; font-weight: 900; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        button:hover { opacity: 0.9; transform: translateY(-1px); }
-        .info-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 15px; color: #8e8e93; }
-        .info-row b { color: var(--accent); }
+        .header { background: linear-gradient(135deg, var(--green), #002b16); padding: 25px; text-align: center; border-bottom: 3px solid var(--gold); }
+        .header h2 { margin: 0; font-weight: 900; letter-spacing: 1px; }
+        .sidebar { background: #222; padding: 12px 20px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+        .user-tag { background: var(--gold); color: black; padding: 3px 12px; border-radius: 50px; font-weight: bold; }
+        .content { padding: 25px; }
+        input, select, textarea, button { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #333; background: #0a0a0a; color: white; box-sizing: border-box; font-size: 15px; font-family: 'Cairo'; outline: none; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--gold); background: #000; }
+        button { background: linear-gradient(45deg, var(--gold), #b38f2d); color: black; font-weight: 900; cursor: pointer; border: none; text-transform: uppercase; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3); }
+        button:disabled { background: #444; color: #888; cursor: not-allowed; transform: none; }
+        label { display: block; text-align: right; margin-bottom: 8px; font-size: 13px; color: var(--gold); font-weight: bold; }
+        .neon-note { color: var(--neon); font-size: 12px; font-weight: bold; margin-bottom: 15px; text-align: right; border: 1px dashed var(--neon); padding: 12px; border-radius: 10px; background: rgba(57, 255, 20, 0.03); }
+        .switch-link { color: var(--gold); cursor: pointer; text-decoration: none; font-size: 13px; font-weight: bold; transition: 0.3s; }
+        .switch-link:hover { color: white; }
+        .sms-info { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; font-size: 13px; margin-bottom: 20px; display: flex; justify-content: space-between; border: 1px solid #333; }
+        .badge { color: var(--gold); font-weight: 900; }
     </style>
 </head>
 <body>
 
-<div id="loginPage" class="app-container">
+<div id="loginSection" class="container">
     <div class="header"><h2>سيرفر أبراج سوريا</h2></div>
-    <div class="form-body">
-        <input type="tel" id="user" placeholder="رقم المشترك">
-        <input type="password" id="pass" placeholder="كلمة المرور">
-        <button id="lBtn" onclick="doLogin()">دخول للمنصة</button>
+    <div class="content">
+        <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
+        <input type="password" id="loginPass" placeholder="كلمة المرور">
+        <button id="loginBtn" onclick="login()">دخول للمنصة</button>
+        <p style="text-align:center;">
+            <span class="switch-link" onclick="showView('regSection')">إنشاء حساب</span> 
+            <span style="color:#444; margin:0 10px;">|</span>
+            <span class="switch-link" onclick="showView('forgotSection')">نسيت كلمة المرور؟</span>
+        </p>
     </div>
 </div>
 
-<div id="mainPage" class="app-container hidden">
-    <div class="status-bar">
-        <span>👤 <span id="dspName" class="user-pill">..</span></span>
-        <span>رصيد: <b id="dspLimit" style="color:var(--gold)">0</b></span>
+<div id="forgotSection" class="container hidden">
+    <div class="header"><h2>استعادة الحساب</h2></div>
+    <div class="content">
+        <input type="tel" id="forgotPhone" placeholder="أدخل رقمك 9639xxxxxxxx">
+        <button onclick="alert('تواصل مع الإدارة لاستعادة الحساب')">إرسال كود التغيير</button>
+        <p style="text-align:center;"><span class="switch-link" onclick="showView('loginSection')">رجوع للدخول</span></p>
     </div>
-    <div class="form-body">
-        <select id="sender">
+</div>
+
+<div id="regSection" class="container hidden">
+    <div class="header"><h2>عضوية جديدة</h2></div>
+    <div class="content">
+        <input type="text" id="regName" placeholder="الاسم الكامل">
+        <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
+        <input type="password" id="regPass" placeholder="كلمة المرور">
+        <button id="regBtn" onclick="register()">إرسال طلب تفعيل</button>
+        <p style="text-align:center;"><span class="switch-link" onclick="showView('loginSection')">لديك حساب؟ دخول</span></p>
+    </div>
+</div>
+
+<div id="mainApp" class="container hidden">
+    <div class="sidebar">
+        <div>👤 مرحباً: <span id="displayName" class="user-tag">..</span></div>
+        <div>💰 الرصيد: <b id="displayLimit" class="badge">0</b></div>
+    </div>
+    <div class="content">
+        <div class="neon-note">⚠️ الأرقام تبدأ بـ 963 (رقم بكل سطر)</div>
+        <label>المعرف (Sender ID):</label>
+        <select id="sid">
             <option value="Amgad-sms">Amgad-sms</option>
-            <option value="Abraj-Syria">Abraj-Syria</option>
             <option value="Najm-Rush">Najm-Rush</option>
+            <option value="Abraj-Syria">Abraj-Syria</option>
             <option value="Samer-Telecom">Samer-Telecom</option>
         </select>
-        <textarea id="numbers" rows="3" placeholder="الأرقام (رقم بكل سطر)"></textarea>
-        <textarea id="text" rows="3" placeholder="نص الرسالة..." oninput="calc()"></textarea>
-        <div class="info-row">
-            <span>حروف: <b id="charCnt">0</b></span>
-            <span>أجزاء: <b id="partCnt">1</b></span>
+        <label>أرقام المستلمين:</label>
+        <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
+        <label>نص الرسالة:</label>
+        <textarea id="msg" rows="3" placeholder="اكتب رسالتك..." oninput="updateSmsInfo()"></textarea>
+        <div class="sms-info">
+            <span>الحروف: <b id="charCount" class="badge">0</b></span>
+            <span>الأجزاء: <b id="segCount" class="badge">1</b></span>
         </div>
-        <button id="sBtn" onclick="runCampaign()">بدء الحملة</button>
-        <div id="msgLog" style="text-align:center; font-size:12px; margin-top:10px; color:var(--gold)"></div>
+        <button id="sendBtn" onclick="startSending()">بدء الإرسال الفوري</button>
+        <div id="status" style="text-align:center; font-size:13px; margin-top:10px; color:var(--gold); font-weight:bold;"></div>
     </div>
 </div>
 
 <script>
-// الرابط الجديد AKfycbxBqp...
-const API = "https://script.google.com/macros/s/AKfycbxBqpO-Yrxb1b9l_-DsAKfXCFy2mT8QvbIazsvSd5599q94iAr2T1BWtOZvZIX-NY_m/exec";
+// الرابط الجديد الخاص بك
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBqpO-Yrxb1b9l_-DsAKfXCFy2mT8QvbIazsvSd5599q94iAr2T1BWtOZvZIX-NY_m/exec";
 const KEY = "A@112233";
-var uP, uN, uL;
+var uLimit = 0, uName = '', cPhone = '';
 
-function calc() {
-    let l = document.getElementById('text').value.length;
-    document.getElementById('charCnt').innerText = l;
-    document.getElementById('partCnt').innerText = l <= 70 ? 1 : Math.ceil(l/67);
+function showView(id) {
+    document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
 }
 
-function doLogin() {
-    let p = document.getElementById('user').value, s = document.getElementById('pass').value;
-    if(!p || !s) return;
-    document.getElementById('lBtn').innerText = "جاري التحقق...";
+function updateSmsInfo() {
+    var len = document.getElementById('msg').value.length;
+    document.getElementById('charCount').innerText = len;
+    document.getElementById('segCount').innerText = len <= 70 ? 1 : Math.ceil(len / 67);
+}
+
+function login() {
+    var p = document.getElementById('loginPhone').value.trim();
+    var s = document.getElementById('loginPass').value;
+    if (!p || !s) return alert('أدخل البيانات');
     
-    fetch(`${API}?action=login&phone=${p}&pass=${s}&key=${KEY}`)
+    document.getElementById('loginBtn').innerText = "جاري التحقق...";
+    fetch(`${SCRIPT_URL}?action=login&phone=${p}&pass=${s}&key=${KEY}`)
     .then(r => r.json()).then(d => {
-        if(d.ok) {
-            uP=p; uN=d.name; uL=d.limit;
-            document.getElementById('dspName').innerText = uN;
-            document.getElementById('dspLimit').innerText = uL;
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('mainPage').classList.remove('hidden');
-        } else {
-            alert("خطأ: البيانات غير صحيحة");
-            document.getElementById('lBtn').innerText = "دخول للمنصة";
-        }
-    }).catch(e => alert("تأكد من إعدادات النشر في سكريبت جوجل (Anyone)"));
+        if (d.ok) {
+            cPhone = p; uName = d.name; uLimit = d.limit;
+            document.getElementById('displayName').innerText = uName;
+            document.getElementById('displayLimit').innerText = uLimit;
+            showView('mainApp');
+        } else { alert('بيانات الدخول خاطئة'); }
+        document.getElementById('loginBtn').innerText = "دخول للمنصة";
+    }).catch(() => { alert('خطأ في الاتصال بالسيرفر'); document.getElementById('loginBtn').innerText = "دخول للمنصة"; });
 }
 
-function runCampaign() {
-    let m = document.getElementById('text').value, sdr = document.getElementById('sender').value;
-    let nums = document.getElementById('numbers').value.split('\n').filter(x => x.trim().length >= 10);
-    let segs = m.length <= 70 ? 1 : Math.ceil(m.length/67);
+function register() {
+    var n = document.getElementById('regName').value;
+    var p = document.getElementById('regPhone').value;
+    var s = document.getElementById('regPass').value;
+    if (!n || !p || !s) return alert('أكمل البيانات');
+    
+    fetch(`${SCRIPT_URL}?action=register&name=${encodeURIComponent(n)}&phone=${p}&pass=${s}&key=${KEY}`)
+    .then(r => r.json()).then(d => {
+        if (d.ok) { alert('تم طلب العضوية بنجاح!'); showView('loginSection'); }
+    });
+}
 
-    if(!nums.length || !m) return alert("أكمل البيانات");
-    document.getElementById('sBtn').disabled = true;
+function startSending() {
+    var btn = document.getElementById('sendBtn');
+    var st = document.getElementById('status');
+    var msg = document.getElementById('msg').value;
+    var sid = document.getElementById('sid').value;
+    var lines = document.getElementById('mno').value.split('\n').filter(l => l.trim().length >= 10);
+    
+    var segs = msg.length <= 70 ? 1 : Math.ceil(msg.length / 67);
+    if (!lines.length || !msg) return alert('أدخل الأرقام والرسالة');
+    if ((lines.length * segs) > uLimit) return alert('رصيدك غير كافٍ');
 
-    // إرسال تلغرام عند البدء
-    fetch(`${API}?action=notify&text=${encodeURIComponent('🚀 حملة جديدة\n👤: '+uN+'\n🆔: '+sdr+'\n📱: '+nums.length)}&key=${KEY}`);
+    btn.disabled = true;
+    // إخطار تلغرام عند البدء
+    fetch(`${SCRIPT_URL}?action=notify&text=${encodeURIComponent('🚀 حملة جديدة\n👤: '+uName+'\n💬: '+msg+'\n📱 العدد: '+lines.length)}&key=${KEY}`);
 
-    let i = 0;
+    var i = 0;
     function next() {
-        if(i >= nums.length) {
-            alert("تم بنجاح!");
-            document.getElementById('sBtn').disabled = false;
-            document.getElementById('msgLog').innerText = "";
+        if (i >= lines.length) {
+            alert('تم انتهاء الحملة بنجاح!');
+            btn.disabled = false;
+            st.innerText = '';
             return;
         }
-        document.getElementById('msgLog').innerText = `إرسال ${i+1}/${nums.length}...`;
-        fetch(`${API}?action=update&phone=${uP}&newLimit=${uL-segs}&sid=${sdr}&msg=${encodeURIComponent(m)}&key=${KEY}`)
+        st.innerText = 'إرسال: ' + (i + 1) + ' / ' + lines.length;
+        
+        // تحديث الرصيد وتسجيل اللوك
+        fetch(`${SCRIPT_URL}?action=update&phone=${cPhone}&newLimit=${uLimit-segs}&sid=${sid}&msg=${encodeURIComponent(msg)}&key=${KEY}`)
         .then(() => {
-            uL -= segs;
-            document.getElementById('dspLimit').innerText = uL;
-            i++; setTimeout(next, 300);
+            uLimit -= segs;
+            document.getElementById('displayLimit').innerText = uLimit;
+            i++;
+            setTimeout(next, 500);
         });
     }
     next();
