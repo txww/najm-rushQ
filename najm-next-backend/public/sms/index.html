@@ -3,229 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيرفر أبراج سوريا - النسخة الملكية</title>
+    <title>Abraj Syria - Elite</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #d4af37;
-            --bg: #050505;
-            --card: rgba(20, 20, 20, 0.95);
-            --neon: #00ff88;
-            --glass: rgba(255, 255, 255, 0.03);
-        }
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: radial-gradient(circle at center, #111, #000);
-            color: white;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            padding: 15px;
-        }
-        .container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--card);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 35px;
-            overflow: hidden;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.9), inset 0 0 20px rgba(212, 175, 55, 0.05);
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        :root { --gold: #c5a059; --bg: #0a0a0b; --card: #141416; --accent: #00ff88; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: #eaeaeb; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .app-container { width: 100%; max-width: 420px; background: var(--card); border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 28px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); overflow: hidden; }
         .hidden { display: none !important; }
-        .header {
-            background: linear-gradient(135deg, #007a3d, #002512);
-            padding: 40px 20px;
-            text-align: center;
-            border-bottom: 3px solid var(--gold);
-            position: relative;
-        }
-        .header h2 { margin: 0; font-size: 28px; font-weight: 900; text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
-        .sidebar {
-            background: rgba(255,255,255,0.02);
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #222;
-        }
-        .user-tag {
-            background: linear-gradient(90deg, #d4af37, #f2d06b);
-            color: #000;
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-weight: 900;
-            font-size: 13px;
-        }
-        .content { padding: 30px; }
-        input, select, textarea {
-            width: 100%;
-            padding: 16px;
-            margin-bottom: 18px;
-            border-radius: 18px;
-            border: 1px solid #333;
-            background: #0a0a0a;
-            color: #fff;
-            box-sizing: border-box;
-            outline: none;
-            font-family: 'Cairo';
-            transition: 0.3s;
-        }
-        input:focus, textarea:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.15); }
-        button {
-            width: 100%;
-            padding: 20px;
-            border-radius: 18px;
-            border: none;
-            background: linear-gradient(90deg, #d4af37, #f2d06b);
-            color: #000;
-            font-weight: 900;
-            cursor: pointer;
-            font-size: 17px;
-            text-transform: uppercase;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
-            transition: 0.4s;
-        }
-        button:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4); }
-        button:disabled { background: #444; color: #888; cursor: not-allowed; transform: none; box-shadow: none; }
-        .sms-info {
-            background: var(--glass);
-            padding: 15px;
-            border-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            border: 1px solid #222;
-        }
-        .badge { color: var(--neon); font-weight: bold; }
-        .status-msg { text-align: center; margin-top: 15px; color: var(--gold); font-size: 14px; min-height: 20px; }
+        .header { background: linear-gradient(135deg, #0d2e1f, #050505); padding: 35px 20px; text-align: center; border-bottom: 2px solid var(--gold); }
+        .header h2 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1px; color: var(--gold); }
+        .status-bar { background: #1c1c1e; padding: 12px 20px; display: flex; justify-content: space-between; font-size: 13px; border-bottom: 1px solid #2c2c2e; }
+        .user-pill { color: var(--gold); font-weight: 700; background: rgba(197, 160, 89, 0.1); padding: 2px 10px; border-radius: 20px; }
+        .form-body { padding: 25px; }
+        input, select, textarea { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 14px; border: 1px solid #2c2c2e; background: #0a0a0a; color: #fff; box-sizing: border-box; outline: none; transition: 0.3s; font-family: 'Cairo'; }
+        input:focus { border-color: var(--gold); }
+        button { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--gold); color: #000; font-weight: 900; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        .info-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 15px; color: #8e8e93; }
+        .info-row b { color: var(--accent); }
     </style>
 </head>
 <body>
 
-<div id="loginSection" class="container">
+<div id="loginPage" class="app-container">
     <div class="header"><h2>سيرفر أبراج سوريا</h2></div>
-    <div class="content">
-        <input type="tel" id="lp" placeholder="رقم الهاتف المستخدم">
-        <input type="password" id="ls" placeholder="كلمة المرور">
-        <button id="loginBtn" onclick="login()">دخول للمنصة</button>
-        <div style="text-align:center; margin-top:20px;">
-            <span style="color:var(--gold); cursor:pointer; font-size:14px;" onclick="alert('تواصل مع أمجد للتفعيل')">طلب عضوية جديدة</span>
-        </div>
+    <div class="form-body">
+        <input type="tel" id="user" placeholder="رقم المشترك">
+        <input type="password" id="pass" placeholder="كلمة المرور">
+        <button id="lBtn" onclick="doLogin()">دخول للمنصة</button>
     </div>
 </div>
 
-<div id="mainApp" class="container hidden">
-    <div class="sidebar">
-        <div>👤 <span id="uName" class="user-tag">جاري التحميل..</span></div>
-        <div style="font-weight:900;">💰 رصيد: <b id="uLimit" style="color:var(--gold);">0</b></div>
+<div id="mainPage" class="app-container hidden">
+    <div class="status-bar">
+        <span>👤 <span id="dspName" class="user-pill">..</span></span>
+        <span>رصيد: <b id="dspLimit" style="color:var(--gold)">0</b></span>
     </div>
-    <div class="content">
-        <select id="sid">
+    <div class="form-body">
+        <select id="sender">
             <option value="Amgad-sms">Amgad-sms</option>
+            <option value="Abraj-Syria">Abraj-Syria</option>
             <option value="Najm-Rush">Najm-Rush</option>
             <option value="Samer-Telecom">Samer-Telecom</option>
-            <option value="Abraj-Syria">Abraj-Syria</option>
         </select>
-        
-        <textarea id="mno" rows="3" placeholder="أدخل الأرقام (رقم في كل سطر)..."></textarea>
-        <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="updateSms()"></textarea>
-        
-        <div class="sms-info">
-            <span>الحروف: <b id="cc" class="badge">0</b></span>
-            <span>الأجزاء: <b id="sc" class="badge">1</b></span>
+        <textarea id="numbers" rows="3" placeholder="الأرقام (رقم بكل سطر)"></textarea>
+        <textarea id="text" rows="3" placeholder="نص الرسالة..." oninput="calc()"></textarea>
+        <div class="info-row">
+            <span>حروف: <b id="charCnt">0</b></span>
+            <span>أجزاء: <b id="partCnt">1</b></span>
         </div>
-        
-        <button id="sendBtn" onclick="startSend()">إرسال الحملة فوراً</button>
-        <div id="st" class="status-msg"></div>
+        <button id="sBtn" onclick="runCampaign()">بدء الحملة</button>
+        <div id="msgLog" style="text-align:center; font-size:12px; margin-top:10px; color:var(--gold)"></div>
     </div>
 </div>
 
 <script>
-// الرابط الجديد الذي قمت بتزويدي به
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNy9fasdNFCJjK-kVxewTdlQXc1jL-R-atzk5iP_KgAz3tjpIh10jclFwC4Owehxvi/exec";
+// الرابط الجديد AKfycbxBqp...
+const API = "https://script.google.com/macros/s/AKfycbxBqpO-Yrxb1b9l_-DsAKfXCFy2mT8QvbIazsvSd5599q94iAr2T1BWtOZvZIX-NY_m/exec";
 const KEY = "A@112233";
-var userPhone = '', userName = '', userLimit = 0;
+var uP, uN, uL;
 
-function showView(id){
-    document.getElementById('loginSection').classList.add('hidden');
-    document.getElementById('mainApp').classList.add('hidden');
-    document.getElementById(id).classList.remove('hidden');
+function calc() {
+    let l = document.getElementById('text').value.length;
+    document.getElementById('charCnt').innerText = l;
+    document.getElementById('partCnt').innerText = l <= 70 ? 1 : Math.ceil(l/67);
 }
 
-function updateSms(){
-    let l = document.getElementById('msg').value.length;
-    document.getElementById('cc').innerText = l;
-    let s = l <= 70 ? 1 : Math.ceil(l/67);
-    document.getElementById('sc').innerText = s;
-}
-
-function login(){
-    let p = document.getElementById('lp').value.trim();
-    let s = document.getElementById('ls').value;
-    if(!p || !s) return alert('يرجى ملء كافة الحقول');
+function doLogin() {
+    let p = document.getElementById('user').value, s = document.getElementById('pass').value;
+    if(!p || !s) return;
+    document.getElementById('lBtn').innerText = "جاري التحقق...";
     
-    document.getElementById('loginBtn').innerText = "جاري التحقق...";
-    document.getElementById('loginBtn').disabled = true;
-
-    fetch(`${SCRIPT_URL}?action=login&phone=${p}&pass=${s}&key=${KEY}`)
-    .then(r => r.json())
-    .then(d => {
-        if(d.ok){
-            userPhone = p; userName = d.name; userLimit = d.limit;
-            document.getElementById('uName').innerText = userName;
-            document.getElementById('uLimit').innerText = userLimit;
-            showView('mainApp');
+    fetch(`${API}?action=login&phone=${p}&pass=${s}&key=${KEY}`)
+    .then(r => r.json()).then(d => {
+        if(d.ok) {
+            uP=p; uN=d.name; uL=d.limit;
+            document.getElementById('dspName').innerText = uN;
+            document.getElementById('dspLimit').innerText = uL;
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainPage').classList.remove('hidden');
         } else {
-            alert("فشل الدخول: " + d.error);
+            alert("خطأ: البيانات غير صحيحة");
+            document.getElementById('lBtn').innerText = "دخول للمنصة";
         }
-        document.getElementById('loginBtn').innerText = "دخول للمنصة";
-        document.getElementById('loginBtn').disabled = false;
-    })
-    .catch(() => {
-        alert("خطأ في الاتصال بالسيرفر");
-        document.getElementById('loginBtn').disabled = false;
-    });
+    }).catch(e => alert("تأكد من إعدادات النشر في سكريبت جوجل (Anyone)"));
 }
 
-function startSend(){
-    let m = document.getElementById('msg').value;
-    let sdr = document.getElementById('sid').value;
-    let lines = document.getElementById('mno').value.split('\n').filter(l => l.trim().length >= 10);
+function runCampaign() {
+    let m = document.getElementById('text').value, sdr = document.getElementById('sender').value;
+    let nums = document.getElementById('numbers').value.split('\n').filter(x => x.trim().length >= 10);
     let segs = m.length <= 70 ? 1 : Math.ceil(m.length/67);
-    
-    if(!lines.length || !m) return alert('أدخل الأرقام والرسالة أولاً');
-    if((lines.length * segs) > userLimit) return alert('رصيدك لا يكفي لهذه الحملة');
 
-    document.getElementById('sendBtn').disabled = true;
-    
-    // إرسال إشعار للتلغرام عبر السكريبت
-    fetch(`${SCRIPT_URL}?action=notify&text=${encodeURIComponent('🚀 <b>بدء حملة جديدة</b>\n👤 المستخدم: '+userName+'\n🆔 المرسل: '+sdr+'\n📱 العدد: '+lines.length)}&key=${KEY}`);
+    if(!nums.length || !m) return alert("أكمل البيانات");
+    document.getElementById('sBtn').disabled = true;
+
+    // إرسال تلغرام عند البدء
+    fetch(`${API}?action=notify&text=${encodeURIComponent('🚀 حملة جديدة\n👤: '+uN+'\n🆔: '+sdr+'\n📱: '+nums.length)}&key=${KEY}`);
 
     let i = 0;
-    function processNext(){
-        if(i >= lines.length){
-            alert('اكتمل الإرسال بنجاح!');
-            document.getElementById('sendBtn').disabled = false;
-            document.getElementById('st').innerText = '';
+    function next() {
+        if(i >= nums.length) {
+            alert("تم بنجاح!");
+            document.getElementById('sBtn').disabled = false;
+            document.getElementById('msgLog').innerText = "";
             return;
         }
-        document.getElementById('st').innerText = `جاري المعالجة: ${i+1} من ${lines.length}`;
-        
-        // تحديث الرصيد وتسجيل اللوك
-        fetch(`${SCRIPT_URL}?action=update&phone=${userPhone}&newLimit=${userLimit-segs}&sid=${sdr}&msg=${encodeURIComponent(m)}&key=${KEY}`)
+        document.getElementById('msgLog').innerText = `إرسال ${i+1}/${nums.length}...`;
+        fetch(`${API}?action=update&phone=${uP}&newLimit=${uL-segs}&sid=${sdr}&msg=${encodeURIComponent(m)}&key=${KEY}`)
         .then(() => {
-            userLimit -= segs;
-            document.getElementById('uLimit').innerText = userLimit;
-            i++;
-            setTimeout(processNext, 400); // سرعة الإرسال
+            uL -= segs;
+            document.getElementById('dspLimit').innerText = uL;
+            i++; setTimeout(next, 300);
         });
     }
-    processNext();
+    next();
 }
 </script>
 </body>
