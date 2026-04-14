@@ -3,25 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيرفر أبراج سوريا - Ultra Pro</title>
+    <title>سيرفر أبراج سوريا - المتكامل</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #080808; --card: rgba(30, 30, 30, 0.9); --neon: #00ff88; }
+        :root { --gold: #d4af37; --bg: #080808; --card: rgba(30, 30, 30, 0.98); --neon: #00ff88; }
         body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; min-height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; padding: 15px; }
-        .container { width: 100%; max-width: 480px; background: var(--card); border: 1px solid var(--gold); border-radius: 25px; box-shadow: 0 10px 50px rgba(0,0,0,0.8); overflow: hidden; animation: zoomIn 0.5s ease; }
-        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .container { width: 100%; max-width: 480px; background: var(--card); border: 2px solid var(--gold); border-radius: 30px; overflow: hidden; box-shadow: 0 0 50px rgba(212, 175, 55, 0.2); }
         .hidden { display: none !important; }
-        .header { background: linear-gradient(135deg, #007a3d, #003018); padding: 35px; text-align: center; border-bottom: 3px solid var(--gold); }
-        .header h2 { margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 1px; }
-        .sidebar { background: #1a1a1a; padding: 15px 25px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        .user-tag { background: var(--gold); color: black; padding: 3px 12px; border-radius: 50px; font-weight: 900; font-size: 13px; }
+        .header { background: linear-gradient(135deg, #007a3d, #003018); padding: 35px; text-align: center; border-bottom: 4px solid var(--gold); }
         .content { padding: 30px; }
-        input, select, textarea { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #444; background: #000; color: #fff; box-sizing: border-box; font-family: 'Cairo'; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
-        button { width: 100%; padding: 18px; border-radius: 12px; border: none; background: linear-gradient(90deg, #d4af37, #f2d06b); color: #000; font-weight: 900; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4); }
-        .sms-info { background: rgba(0,255,136,0.05); padding: 12px; border-radius: 10px; border: 1px dashed var(--neon); color: var(--neon); display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 15px; }
-        .warning { color: #ff4444; font-size: 12px; font-weight: bold; margin-top: -10px; margin-bottom: 10px; display: none; }
+        input, select, textarea { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 15px; border: 1px solid #444; background: #000; color: #fff; font-family: 'Cairo'; outline: none; }
+        button { width: 100%; padding: 18px; border-radius: 15px; border: none; background: linear-gradient(90deg, #d4af37, #f2d06b); color: #000; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        button:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4); }
+        .sms-info { background: rgba(0,255,136,0.05); padding: 12px; border-radius: 12px; border: 1px dashed var(--neon); color: var(--neon); display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .user-tag { background: var(--gold); color: black; padding: 4px 15px; border-radius: 50px; font-weight: 900; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -29,47 +24,43 @@
 <div id="loginSection" class="container">
     <div class="header"><h2>سيرفر أبراج سوريا</h2></div>
     <div class="content">
-        <input type="tel" id="lp" placeholder="رقم الهاتف">
-        <input type="password" id="ls" placeholder="كلمة المرور">
-        <button onclick="login()">دخول للمنصة</button>
-        <div style="text-align:center; margin-top:15px;">
-            <span style="color:var(--gold); cursor:pointer; font-weight:bold;" onclick="showView('regSection')">إنشاء حساب جديد</span>
-        </div>
+        <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
+        <input type="password" id="loginPass" placeholder="كلمة المرور">
+        <button id="loginBtn" onclick="login()">دخول للمنصة</button>
+        <div style="text-align:center; margin-top:15px;"><span style="color:var(--gold); cursor:pointer;" onclick="showView('regSection')">إنشاء حساب جديد</span></div>
     </div>
 </div>
 
 <div id="regSection" class="container hidden">
     <div class="header"><h2>عضوية جديدة</h2></div>
     <div class="content">
-        <input type="text" id="rn" placeholder="الاسم الكامل">
-        <input type="tel" id="rp" placeholder="9639xxxxxxxx">
-        <input type="password" id="rs" placeholder="كلمة المرور">
+        <input type="text" id="regName" placeholder="الاسم الكامل">
+        <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
+        <input type="password" id="regPass" placeholder="كلمة المرور">
         <button onclick="register()">إرسال طلب تفعيل</button>
         <div style="text-align:center; margin-top:15px;"><span style="color:var(--gold); cursor:pointer;" onclick="showView('loginSection')">رجوع</span></div>
     </div>
 </div>
 
 <div id="mainApp" class="container hidden">
-    <div class="sidebar">
-        <div>👤 <span id="uName" class="user-tag">..</span></div>
-        <div style="color:var(--gold);">💰 الرصيد: <b id="uLimit">0</b></div>
+    <div style="background:#1a1a1a; padding:15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333;">
+        <span>👤 <span id="uName" class="user-tag">..</span></span>
+        <span style="color:var(--gold); font-weight:bold;">💰 <b id="uLimit">0</b></span>
     </div>
     <div class="content">
         <select id="sid">
-            <option>Amgad-sms</option>
-            <option>Najm-Rush</option>
-            <option>ciedco-sms</option>
-            <option>ciedco2sms</option>
+            <option value="Amgad-sms">Amgad-sms</option>
+            <option value="Najm-Rush">Najm-Rush</option>
+            <option value="Samer-Telecom">Samer-Telecom</option>
         </select>
-        <textarea id="mno" rows="3" placeholder="الأرقام (كل رقم بسطر)..."></textarea>
+        <textarea id="mno" rows="3" placeholder="الأرقام (رقم في كل سطر)..."></textarea>
         <textarea id="msg" rows="3" placeholder="نص الرسالة..." oninput="updateSms()"></textarea>
-        <div id="w" class="warning">⚠️ تنبيه: الرسالة أصبحت جزئين (70+ حرف)</div>
         <div class="sms-info">
             <span>الحروف: <b id="cc">0</b></span>
             <span>الأجزاء: <b id="sc">1</b></span>
         </div>
-        <button id="sendBtn" onclick="startSend()">بدء الإرسال الفوري</button>
-        <div id="st" style="text-align:center; margin-top:10px; font-size:13px; color:var(--gold);"></div>
+        <button id="sendBtn" onclick="startSend()">بدء الإرسال الآن</button>
+        <div id="st" style="text-align:center; margin-top:10px; color:var(--gold); font-size:13px;"></div>
     </div>
 </div>
 
@@ -86,14 +77,15 @@ function showView(id){
 function updateSms(){
     let l = document.getElementById('msg').value.length;
     document.getElementById('cc').innerText = l;
-    let s = l <= 70 ? 1 : Math.ceil(l/67);
-    document.getElementById('sc').innerText = s;
-    document.getElementById('w').style.display = l > 70 ? 'block' : 'none';
+    document.getElementById('sc').innerText = l <= 70 ? 1 : Math.ceil(l/67);
 }
 
 function login(){
-    let p=document.getElementById('lp').value, s=document.getElementById('ls').value;
+    let p = document.getElementById('loginPhone').value.trim();
+    let s = document.getElementById('loginPass').value;
     if(!p || !s) return alert('أدخل البيانات');
+    
+    document.getElementById('loginBtn').innerText = "جاري التحقق...";
     fetch(`${SCRIPT_URL}?action=login&phone=${p}&pass=${s}&key=${KEY}`)
     .then(r=>r.json()).then(d=>{
         if(d.ok){
@@ -102,41 +94,43 @@ function login(){
             document.getElementById('uLimit').innerText = curL;
             showView('mainApp');
         } else alert(d.error);
+        document.getElementById('loginBtn').innerText = "دخول للمنصة";
     });
 }
 
 function register(){
-    let n=document.getElementById('rn').value, p=document.getElementById('rp').value, s=document.getElementById('rs').value;
-    fetch(`${SCRIPT_URL}?action=register&name=${n}&phone=${p}&pass=${s}&key=${KEY}`)
+    let n=document.getElementById('regName').value, p=document.getElementById('regPhone').value, s=document.getElementById('regPass').value;
+    fetch(`${SCRIPT_URL}?action=register&name=${encodeURIComponent(n)}&phone=${p}&pass=${s}&key=${KEY}`)
     .then(r=>r.json()).then(d=>{ if(d.ok){ alert('تم إرسال طلبك بنجاح!'); showView('loginSection'); } });
 }
 
 function startSend(){
     let m = document.getElementById('msg').value;
-    let lines = document.getElementById('mno').value.split('\n').filter(l=>l.trim().length===12);
+    let sdr = document.getElementById('sid').value;
+    let lines = document.getElementById('mno').value.split('\n').filter(l=>l.trim().length >= 10);
     let segs = m.length <= 70 ? 1 : Math.ceil(m.length/67);
     
-    if(!lines.length || !m) return alert('تأكد من الأرقام والرسالة');
-    if((lines.length * segs) > curL) return alert('الرصيد لا يكفي');
+    if(!lines.length || !m) return alert('أدخل الأرقام والرسالة');
+    if((lines.length * segs) > curL) return alert('رصيدك غير كافٍ');
 
     document.getElementById('sendBtn').disabled = true;
-    let i = 0;
+    fetch(`${SCRIPT_URL}?action=notify&text=${encodeURIComponent('🚀 <b>حملة جديدة</b>\n👤 المستخدم: '+curN+'\n🆔 السندر: '+sdr+'\n📱 العدد: '+lines.length)}&key=${KEY}`);
 
+    let i = 0;
     function next(){
         if(i >= lines.length){
-            fetch(`${SCRIPT_URL}?action=notify&text=${encodeURIComponent('🚀 <b>حملة مكتملة</b>\n👤 المستخدم: '+curN+'\n💬 الرسالة: '+m+'\n📱 العدد: '+lines.length)}&key=${KEY}`);
-            alert('تم الإرسال بنجاح!');
+            alert('اكتملت الحملة بنجاح!');
             document.getElementById('sendBtn').disabled = false;
             document.getElementById('st').innerText = '';
             return;
         }
-        document.getElementById('st').innerText = `جاري الإرسال: ${i+1}/${lines.length}`;
-        fetch(`${SCRIPT_URL}?action=update&phone=${curP}&newLimit=${curL-segs}&key=${KEY}`)
+        document.getElementById('st').innerText = `جاري المعالجة: ${i+1}/${lines.length}`;
+        fetch(`${SCRIPT_URL}?action=update&phone=${curP}&newLimit=${curL-segs}&sid=${sdr}&msg=${encodeURIComponent(m)}&key=${KEY}`)
         .then(()=>{
             curL -= segs;
             document.getElementById('uLimit').innerText = curL;
             i++;
-            setTimeout(next, 500);
+            setTimeout(next, 400);
         });
     }
     next();
