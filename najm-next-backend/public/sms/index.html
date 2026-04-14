@@ -3,116 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيرفر أبراج سوريا | النسخة الاحترافية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>سيرفر رسائل أبراج سوريا</title>
     <style>
-        :root { 
-            --gold: #d4af37; 
-            --gold-glow: rgba(212, 175, 55, 0.4);
-            --bg: #0d0d0d; 
-            --card: rgba(25, 25, 25, 0.95); 
-            --neon-green: #39FF14; 
-        }
-
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); 
-            color: #f0f0f0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0; 
-            padding: 15px;
-        }
-
-        .container { 
-            width: 100%; 
-            max-width: 460px; 
-            background: var(--card); 
-            border-radius: 25px; 
-            border: 1px solid var(--gold); 
-            overflow: hidden; 
-            backdrop-filter: blur(10px); 
-            box-shadow: 0 15px 50px rgba(0,0,0,0.9);
-            animation: fadeIn 0.6s ease;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        :root { --gold: #d4af37; --bg: #121212; --card: #1e1e1e; --neon: #39FF14; --green: #007a3d; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 10px; }
+        .container { width: 100%; max-width: 450px; background: var(--card); border-radius: 15px; border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .hidden { display: none !important; }
-
-        .header { 
-            background: linear-gradient(135deg, #d4af37 0%, #b38f2d 100%); 
-            padding: 30px 20px; 
-            text-align: center; 
-            border-bottom: 2px solid rgba(0,0,0,0.1);
-        }
-
-        .header h2 { margin: 0; color: #000; font-size: 24px; font-weight: 900; text-shadow: 0 1px 2px rgba(255,255,255,0.3); }
-
-        .sidebar { 
-            background: rgba(0,0,0,0.3); 
-            padding: 15px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid #333;
-        }
-
-        .user-tag { background: var(--gold); color: #000; padding: 3px 15px; border-radius: 50px; font-weight: bold; font-size: 13px; box-shadow: 0 0 10px var(--gold-glow); }
-
-        .content { padding: 30px; }
-
-        label { display: block; margin-bottom: 10px; font-size: 13px; color: var(--gold); font-weight: bold; text-align: right; }
-
-        input, select, textarea { 
-            width: 100%; 
-            padding: 14px; 
-            margin-bottom: 20px; 
-            border-radius: 12px; 
-            border: 1px solid #333; 
-            background: rgba(255,255,255,0.03); 
-            color: #fff; 
-            font-size: 15px; 
-            outline: none; 
-            box-sizing: border-box; 
-            transition: 0.3s;
-        }
-
-        input:focus, textarea:focus { border-color: var(--gold); background: rgba(255,255,255,0.07); }
-
-        button { 
-            width: 100%; 
-            padding: 16px; 
-            border-radius: 12px; 
-            border: none; 
-            background: linear-gradient(45deg, var(--gold), #f2d06b); 
-            color: #000; 
-            font-weight: 800; 
-            font-size: 16px; 
-            cursor: pointer; 
-            box-shadow: 0 4px 15px var(--gold-glow);
-            transition: 0.4s;
-        }
-
-        button:hover { transform: scale(1.02); opacity: 0.95; }
-        button:active { transform: scale(0.98); }
-
-        .sms-info { 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: 12px; 
-            margin-top: -15px; 
-            margin-bottom: 20px; 
-            color: #888; 
-            padding: 0 5px;
-        }
-
-        .switch-link { color: var(--gold); cursor: pointer; text-decoration: none; font-size: 13px; font-weight: bold; }
-        .switch-link:hover { text-decoration: underline; }
-
-        #status { text-align: center; font-size: 13px; margin-top: 15px; color: var(--gold); font-weight: bold; }
+        .header { background: linear-gradient(45deg, var(--green), #004d26); padding: 20px; text-align: center; border-bottom: 2px solid var(--gold); }
+        .header h2 { margin: 0; color: white; }
+        .sidebar { background: #252525; padding: 15px; border-bottom: 1px solid var(--gold); display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+        .user-tag { background: var(--gold); color: black; padding: 2px 10px; border-radius: 20px; font-weight: bold; }
+        .content { padding: 25px; text-align: center; }
+        input, select, textarea, button { width: 100%; padding: 14px; margin-bottom: 14px; border-radius: 10px; border: 1px solid #444; background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; font-size: 14px; outline: none; }
+        input:focus, textarea:focus { border-color: var(--gold); }
+        button { background: linear-gradient(45deg, var(--gold), #b38f2d); color: black; font-weight: bold; cursor: pointer; border: none; font-size: 15px; }
+        button:hover { opacity: 0.85; }
+        button:disabled { background: #555; cursor: not-allowed; }
+        label { display: block; text-align: right; margin-bottom: 5px; font-size: 12px; color: var(--gold); }
+        .neon-note { color: var(--neon); font-size: 12px; font-weight: bold; margin-bottom: 15px; text-align: right; border: 1px dashed var(--neon); padding: 10px; border-radius: 8px; line-height: 1.6; background: rgba(0,255,128,0.05); }
+        .switch-link { color: var(--gold); cursor: pointer; text-decoration: underline; font-size: 13px; margin: 5px; display: inline-block; }
+        .sms-info { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; font-size: 13px; margin-top: -10px; margin-bottom: 15px; display: flex; justify-content: space-between; border: 1px dashed #555; }
     </style>
 </head>
 <body>
@@ -122,123 +32,212 @@
     <div class="content">
         <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
         <input type="password" id="loginPass" placeholder="كلمة المرور">
-        <button id="loginBtn" onclick="login()">دخول للمنصة</button>
-        <p style="text-align:center; margin-top:20px;">
-            <span class="switch-link" onclick="showView('regSection')">طلب اشتراك جديد</span>
+        <button id="loginBtn" onclick="login()">دخول</button>
+        <p>
+            <span class="switch-link" onclick="showView('regSection')">إنشاء حساب</span> |
+            <span class="switch-link" onclick="showView('forgotSection')">نسيت كلمة المرور؟</span>
         </p>
+    </div>
+</div>
+
+<div id="forgotSection" class="container hidden">
+    <div class="header"><h2>استعادة الحساب</h2></div>
+    <div class="content">
+        <p style="font-size:12px;color:#aaa;">أدخل رقمك المسجل لإرسال كود التحقق</p>
+        <input type="tel" id="forgotPhone" placeholder="9639xxxxxxxx">
+        <button onclick="sendResetOTP()">إرسال كود التغيير</button>
+        <p><span class="switch-link" onclick="showView('loginSection')">رجوع</span></p>
+    </div>
+</div>
+
+<div id="resetPassSection" class="container hidden">
+    <div class="header"><h2>تغيير كلمة المرور</h2></div>
+    <div class="content">
+        <input type="text" id="resetOtpInput" placeholder="أدخل الكود" maxlength="4">
+        <input type="password" id="newPassInput" placeholder="كلمة المرور الجديدة">
+        <button onclick="verifyAndReset()">تحديث الآن</button>
+    </div>
+</div>
+
+<div id="regSection" class="container hidden">
+    <div class="header"><h2>عضوية جديدة</h2></div>
+    <div class="content">
+        <input type="text" id="regName" placeholder="الاسم الكامل">
+        <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
+        <input type="password" id="regPass" placeholder="كلمة المرور">
+        <button onclick="sendRegOTP()">إرسال كود التفعيل</button>
+        <p><span class="switch-link" onclick="showView('loginSection')">لديك حساب؟ دخول</span></p>
+    </div>
+</div>
+
+<div id="otpSection" class="container hidden">
+    <div class="header"><h2>تأكيد الرقم</h2></div>
+    <div class="content">
+        <input type="text" id="otpInput" placeholder="أدخل الكود" maxlength="4">
+        <button onclick="verifyAndRegister()">تفعيل الحساب</button>
     </div>
 </div>
 
 <div id="mainApp" class="container hidden">
     <div class="sidebar">
-        <div>المستخدم: <span id="displayName" class="user-tag">..</span></div>
-        <div>الرصيد: <b id="displayLimit" style="color:var(--neon-green);">0</b></div>
+        <div>مرحباً: <span id="displayName" class="user-tag">..</span></div>
+        <div>رصيدك: <b id="displayLimit" style="color:var(--gold);">0</b></div>
     </div>
     <div class="content">
+        <div class="neon-note">⚠️ الأرقام تبدأ بـ 963 بدون صفر وبدون (+)<br>مثال: 963968899922</div>
         <label>المعرف (Sender ID):</label>
         <select id="sid">
-            <option value="Amgad-sms">Amgad-sms (فردي + جماعي) ✅</option>
-            <option value="ciedco-sms">ciedco-sms (رسائل فردية فقط) 👤</option>
-            <option value="ciedco2sms">ciedco2sms (رسائل جماعية فقط) 👥</option>
-            <option value="Najm-Rush">Najm-Rush (فردي + جماعي) ✅</option>
+            <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
+            <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
+            <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
+            <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
         </select>
-
-        <label>أرقام المستلمين (9639...):</label>
-        <textarea id="mno" rows="4" placeholder="رقم في كل سطر"></textarea>
-
+        <label>أرقام المستلمين (رقم بكل سطر):</label>
+        <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
         <label>نص الرسالة:</label>
         <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="updateSmsInfo()"></textarea>
-        
         <div class="sms-info">
             <span>الحروف: <b id="charCount">0</b></span>
-            <span>الأجزاء: <b id="segCount">1</b></span>
+            <span>الرسائل/رقم: <b id="segCount">1</b></span>
         </div>
-
-        <button id="sendBtn" onclick="startCampaign()">إرسال الحملة الآن</button>
-        <div id="status"></div>
-    </div>
-</div>
-
-<div id="regSection" class="container hidden">
-    <div class="header"><h2>عضوية VIP جديدة</h2></div>
-    <div class="content">
-        <input type="text" id="regName" placeholder="الاسم الكامل">
-        <input type="tel" id="regPhone" placeholder="رقم الهاتف">
-        <input type="password" id="regPass" placeholder="كلمة المرور المطلوبة">
-        <button onclick="register()">إرسال طلب التفعيل</button>
-        <p style="text-align:center; margin-top:20px;">
-            <span class="switch-link" onclick="showView('loginSection')">رجوع لتسجيل الدخول</span>
-        </p>
+        <button id="sendBtn">بدء الإرسال الآن</button>
+        <div id="status" style="font-size:12px;margin-top:8px;color:var(--gold);font-weight:bold;"></div>
     </div>
 </div>
 
 <script>
-    // الرابط الجديد الخاص بك
-    const API = 'https://script.google.com/macros/s/AKfycbxzx97kXSKP1FkpzbG-NG16B47FftakDSljc0sl35WvBlLXuSASZm_lgSokZFdSHQ1d/exec';
+var API = '/sms-api';
+var uLimit = 0, uName = '', cPhone = '';
 
-    function showView(id) {
-        document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
+function showView(id) {
+    var boxes = document.querySelectorAll('.container');
+    for (var i = 0; i < boxes.length; i++) boxes[i].classList.add('hidden');
+    document.getElementById(id).classList.remove('hidden');
+}
+
+function updateSmsInfo() {
+    var len = document.getElementById('msg').value.length;
+    document.getElementById('charCount').innerText = len;
+    document.getElementById('segCount').innerText = len <= 70 ? 1 : Math.ceil(len / 67);
+}
+
+function api(endpoint, data) {
+    return fetch(API + '/' + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    }).then(function(r) { return r.json(); });
+}
+
+function login() {
+    var phone = document.getElementById('loginPhone').value.trim();
+    var pass = document.getElementById('loginPass').value;
+    if (!phone || !pass) return alert('أدخل البيانات');
+    document.getElementById('loginBtn').disabled = true;
+    api('login', { phone: phone, pass: pass }).then(function(d) {
+        if (!d.ok) { alert('بيانات خاطئة'); }
+        else {
+            cPhone = phone; uName = d.name; uLimit = d.limit;
+            document.getElementById('displayName').innerText = uName;
+            document.getElementById('displayLimit').innerText = uLimit;
+            showView('mainApp');
+        }
+        document.getElementById('loginBtn').disabled = false;
+    }).catch(function() { alert('خطأ بالاتصال'); document.getElementById('loginBtn').disabled = false; });
+}
+
+// ... بقية وظائف الحساب (sendRegOTP, verifyAndRegister إلخ) تبقى كما هي ...
+function sendRegOTP() {
+    var phone = document.getElementById('regPhone').value.trim();
+    var name = document.getElementById('regName').value.trim();
+    var pass = document.getElementById('regPass').value;
+    if (phone.length !== 12 || !name || !pass) return alert('تأكد من البيانات');
+    api('send-reg-otp', { phone: phone, name: name, pass: pass }).then(function(d) {
+        if (d.error) return alert(d.error);
+        cPhone = phone;
+        showView('otpSection');
+    }).catch(function() { alert('خطأ'); });
+}
+
+function verifyAndRegister() {
+    var otp = document.getElementById('otpInput').value.trim();
+    if (otp.length !== 4) return alert('أدخل كود من 4 أرقام');
+    api('verify-register', { phone: cPhone, otp: otp }).then(function(d) {
+        if (d.ok) { alert('تم إنشاء حسابك! تواصل مع الإدارة للشحن.'); showView('loginSection'); }
+        else alert(d.error || 'خطأ');
+    }).catch(function() { alert('خطأ'); });
+}
+
+function sendResetOTP() {
+    var phone = document.getElementById('forgotPhone').value.trim();
+    if (phone.length < 10) return alert('أدخل رقمك');
+    api('send-reset-otp', { phone: phone }).then(function(d) {
+        if (d.error) return alert(d.error);
+        cPhone = phone;
+        showView('resetPassSection');
+    }).catch(function() { alert('خطأ'); });
+}
+
+function verifyAndReset() {
+    var otp = document.getElementById('resetOtpInput').value.trim();
+    var newPass = document.getElementById('newPassInput').value;
+    if (otp.length !== 4 || newPass.length < 4) return alert('تحقق من البيانات');
+    api('verify-reset', { phone: cPhone, otp: otp, newPass: newPass }).then(function(d) {
+        if (d.ok) { alert('تم تحديث كلمة السر!'); showView('loginSection'); }
+        else alert(d.error || 'كود خاطئ');
+    }).catch(function() { alert('خطأ'); });
+}
+
+document.getElementById('sendBtn').onclick = function() {
+    var btn = document.getElementById('sendBtn');
+    var st = document.getElementById('status');
+    var msg = document.getElementById('msg').value;
+    var sid = document.getElementById('sid').value;
+    var lines = document.getElementById('mno').value.split(/\r?\n/);
+    var nums = [];
+    for (var i = 0; i < lines.length; i++) {
+        var n = lines[i].trim();
+        if (n.length === 12) nums.push(n);
     }
+    var segs = msg.length <= 70 ? 1 : Math.ceil(msg.length / 67);
+    var totalNeeded = nums.length * segs;
 
-    function notifyTG(text) {
-        fetch(API + '?endpoint=notify', {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ text: text })
+    if (!nums.length || !msg) return alert('أدخل الأرقام والرسالة');
+    if (totalNeeded > uLimit) return alert('رصيدك (' + uLimit + ') لا يكفي لـ ' + totalNeeded + ' رسالة');
+
+    btn.disabled = true;
+    var sc = 0;
+    var idx = 0;
+
+    function sendNext() {
+        if (idx >= nums.length) {
+            // إضافة نص الرسالة في تقرير التلغرام
+            var reportText = '🚀 حملة: ' + uName + '\n' +
+                             '💬 الرسالة: ' + msg + '\n' +
+                             '📱 أرسل لـ ' + sc + '/' + nums.length + '\n' +
+                             '🏁 المتبقي: ' + uLimit;
+            api('notify', { text: reportText });
+            alert('تم الإرسال لـ ' + sc + ' رقم بنجاح');
+            btn.disabled = false;
+            st.innerText = '';
+            return;
+        }
+        st.innerText = 'إرسال (' + (idx + 1) + '/' + nums.length + ')';
+        api('send-sms', { phone: cPhone, mno: nums[idx], msg: msg, sid: sid }).then(function(d) {
+            // الخصم بناءً على عدد أجزاء الرسالة (segs) لكل رقم ناجح
+            if (d.result && (String(d.result).indexOf('OK') !== -1 || String(d.result).length > 5)) {
+                sc++;
+                uLimit -= segs;
+                document.getElementById('displayLimit').innerText = uLimit;
+                api('update-limit', { phone: cPhone, newLimit: uLimit });
+            }
+        }).catch(function() {}).then(function() {
+            idx++;
+            setTimeout(sendNext, 600);
         });
     }
-
-    function login() {
-        const phone = document.getElementById('loginPhone').value.trim();
-        if(!phone) return alert('يرجى إدخال الرقم');
-
-        // تنبيه تلغرام عند محاولة الدخول
-        notifyTG(`🔑 *دخول للمنصة*\n📱 الرقم: ${phone}\n🕒 الوقت: ${new Date().toLocaleTimeString('ar-SY')}`);
-        
-        document.getElementById('displayName').innerText = phone;
-        document.getElementById('displayLimit').innerText = "1500"; // رصيد افتراضي
-        showView('mainApp');
-    }
-
-    function register() {
-        const name = document.getElementById('regName').value;
-        const phone = document.getElementById('regPhone').value;
-        if(!name || !phone) return alert('أكمل البيانات');
-
-        // تنبيه تلغرام عند طلب اشتراك
-        notifyTG(`📝 *طلب تسجيل جديد*\n👤 الاسم: ${name}\n📱 الرقم: ${phone}`);
-        alert('تم إرسال طلبك بنجاح، سيتم التواصل معك للتفعيل');
-        showView('loginSection');
-    }
-
-    function updateSmsInfo() {
-        const len = document.getElementById('msg').value.length;
-        document.getElementById('charCount').innerText = len;
-        document.getElementById('segCount').innerText = len <= 70 ? 1 : Math.ceil(len / 67);
-    }
-
-    function startCampaign() {
-        const msg = document.getElementById('msg').value;
-        const sid = document.getElementById('sid').value;
-        const nums = document.getElementById('mno').value.split('\n').filter(n => n.trim().length >= 10);
-        
-        if(!msg || nums.length === 0) return alert('يرجى إدخال الأرقام والرسالة');
-        
-        document.getElementById('sendBtn').disabled = true;
-        document.getElementById('status').innerText = '🚀 جاري المعالجة وإرسال التقرير...';
-        
-        const report = `🚀 *حملة إرسال جديدة*\n👤 المستخدم: ${document.getElementById('displayName').innerText}\n🆔 السندر: ${sid}\n💬 الرسالة: ${msg}\n📱 عدد الأرقام: ${nums.length}`;
-        
-        notifyTG(report);
-        
-        setTimeout(() => {
-            alert('تم إطلاق الحملة بنجاح! راقب تلغرام للتحديثات.');
-            document.getElementById('sendBtn').disabled = false;
-            document.getElementById('status').innerText = '';
-        }, 1500);
-    }
+    sendNext();
+};
 </script>
-
 </body>
 </html>
