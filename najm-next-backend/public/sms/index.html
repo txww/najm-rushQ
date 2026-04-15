@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيرفير رسائل شركة نجم راش | سيرفر رسائل أبراج سوريا</title>
+    <title>سيرفير شركة نجم راش | أبراج سوريا</title>
     <style>
         :root { 
             --gold: #d4af37; 
@@ -100,18 +100,8 @@
             transition: 0.3s;
         }
 
-        button:hover { filter: brightness(1.2); transform: scale(1.02); }
-
-        .neon-note { 
-            color: var(--neon); 
-            font-size: 12px; 
-            margin-bottom: 20px; 
-            text-align: right; 
-            border-right: 3px solid var(--neon); 
-            padding: 10px 15px; 
-            background: rgba(57, 255, 20, 0.03);
-            border-radius: 0 8px 8px 0;
-        }
+        button:hover:not(:disabled) { filter: brightness(1.2); transform: scale(1.02); }
+        button:disabled { background: #444; color: #777; cursor: not-allowed; }
 
         .copy-box {
             background: rgba(57, 255, 20, 0.1);
@@ -129,9 +119,17 @@
 
         .copy-box:active { background: var(--neon); color: black; }
 
-        .switch-link { color: #aaa; cursor: pointer; font-size: 13px; text-decoration: none; }
-        .switch-link:hover { color: var(--gold); }
-        
+        .neon-note { 
+            color: var(--neon); 
+            font-size: 12px; 
+            margin-bottom: 20px; 
+            text-align: right; 
+            border-right: 3px solid var(--neon); 
+            padding: 10px 15px; 
+            background: rgba(57, 255, 20, 0.03);
+            border-radius: 0 8px 8px 0;
+        }
+
         .sms-info { 
             background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; font-size: 12px; 
             margin-bottom: 20px; display: flex; justify-content: space-around; border: 1px solid #222;
@@ -139,6 +137,7 @@
 
         .user-tag { background: var(--gold); color: black; padding: 4px 12px; border-radius: 50px; font-weight: bold; }
         .sidebar { background: rgba(0,0,0,0.4); padding: 15px 25px; border-bottom: 1px solid rgba(212,175,55,0.2); display: flex; justify-content: space-between; align-items: center; }
+        .status-msg { text-align: center; font-size: 13px; color: var(--gold); margin-top: 10px; font-weight: bold; }
 
     </style>
 </head>
@@ -147,9 +146,9 @@
 <div class="bg-animate"></div>
 
 <div id="loginSection" class="container">
-    <div class="header"><h2>سيرفير أبراج سوريا</h2><small style="color:rgba(255,255,255,0.6)">نظام الاتصالات الموحد</small></div>
+    <div class="header"><h2>سيرفير أبراج سوريا</h2><small style="color:rgba(255,255,255,0.6)">نظام شركة نجم راش الموحد</small></div>
     <div class="content">
-        <input type="tel" id="loginPhone" placeholder="9639xxxxxxxx">
+        <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
         <input type="password" id="loginPass" placeholder="كلمة المرور">
         <button id="loginBtn" onclick="App.login()">تسجيل الدخول</button>
         <div style="margin-top:15px; text-align:center;">
@@ -167,8 +166,8 @@
         <div class="copy-box" onclick="App.copyCode(this)">17adf5539abf581e5fe62f6f4c172e0a</div>
         
         <input type="text" id="rechargeName" placeholder="الاسم الثلاثي">
-        <label style="color: var(--gold); font-size: 12px; text-align: right; display: block;">وصل الإرسال (صورة أو نص):</label>
-        <textarea id="rechargeProof" rows="3" placeholder="أدخل رقم العملية أو رابط الصورة..."></textarea>
+        <label style="color: var(--gold); font-size: 12px; text-align: right; display: block;">رقم وصل الإرسال أو رابط الصورة:</label>
+        <textarea id="rechargeProof" rows="3" placeholder="أدخل بيانات الوصل هنا..."></textarea>
         
         <input type="tel" id="rechargePhone" placeholder="رقم هاتفك المسجل لدينا">
         <input type="password" id="rechargePass" placeholder="كلمة المرور">
@@ -184,7 +183,7 @@
         <div style="font-size: 13px;">الرصيد: <b id="displayLimit" style="color:var(--gold); font-size: 16px;">0</b></div>
     </div>
     <div class="content">
-        <div class="neon-note">نظام الأبراج يعمل بكفاءة عالية ⚡<br>يرجى كتابة الأرقام بدون صفر وبالتنسيق الدولي 963.</div>
+        <div class="neon-note">نظام الأبراج يعمل بكفاءة عالية ⚡<br>يرجى كتابة الأرقام بالتنسيق الدولي 963.</div>
         
         <label style="color: var(--gold);">بوابة الإرسال (Sender ID):</label>
         <select id="sid">
@@ -203,7 +202,7 @@
         </div>
 
         <button id="sendBtn" onclick="App.startBulkSend()">إرسال الرسائل الآن</button>
-        <div id="status" class="status-msg" style="text-align: center; margin-top: 10px; color: var(--gold);"></div>
+        <div id="status" class="status-msg"></div>
     </div>
 </div>
 
@@ -230,6 +229,7 @@
 const App = {
     API: '/sms-api',
     user: { phone: '', name: '', limit: 0 },
+    isSending: false,
 
     showView(id) {
         document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
@@ -237,8 +237,7 @@ const App = {
     },
 
     copyCode(el) {
-        const text = el.innerText;
-        navigator.clipboard.writeText(text);
+        navigator.clipboard.writeText("17adf5539abf581e5fe62f6f4c172e0a");
         const originalText = el.innerText;
         el.innerText = "تم النسخ بنجاح!";
         setTimeout(() => el.innerText = originalText, 1500);
@@ -252,10 +251,10 @@ const App = {
 
         if(!name || !proof || !phone || !pass) return alert('يرجى ملء كافة الحقول لطلب الشحن');
 
-        const report = `💰 طلب شحن رصيد (شام كاش)\n👤 الاسم: ${name}\n📱 الرقم: ${phone}\n🧾  رقم الوصل: ${proof}`;
-        const res = await this.call('notify', { text: report });
+        const report = `💰 طلب شحن رصيد (شام كاش)\n👤 الاسم: ${name}\n📱 الرقم: ${phone}\n🧾 رقم الوصل: ${proof}`;
+        await this.call('notify', { text: report });
         
-        alert('تم إرسال طلب الشحن للإدارة بنجاح. سيتم التدقيق وتعبئة رصيدك قريباً.');
+        alert('تم إرسال طلب الشحن للإدارة بنجاح.');
         this.showView('loginSection');
     },
 
@@ -293,21 +292,47 @@ const App = {
     },
 
     async startBulkSend() {
+        if(this.isSending) return;
         const msg = document.getElementById('msg').value.trim();
         const sid = document.getElementById('sid').value;
         const nums = document.getElementById('mno').value.split('\n').map(n => n.trim()).filter(n => n.length === 12);
-        const segs = msg.length <= 70 ? 1 : Math.ceil(msg.length / 67);
-        if(!nums.length || !msg) return alert('تحقق من الأرقام والرسالة');
+        
+        const segs = msg.length <= 70 ? (msg.length === 0 ? 0 : 1) : Math.ceil(msg.length / 67);
+        const totalNeeded = nums.length * segs;
 
-        document.getElementById('sendBtn').disabled = true;
+        if(!nums.length || !msg) return alert('تحقق من الأرقام والرسالة');
+        if(totalNeeded > this.user.limit) return alert('رصيدك لا يكفي!');
+
+        this.isSending = true;
+        const btn = document.getElementById('sendBtn');
+        const st = document.getElementById('status');
+        btn.disabled = true;
+
         let sc = 0;
-        for(let n of nums) {
-            const res = await this.call('send-sms', { phone: this.user.phone, mno: n, msg, sid });
-            if(res.ok) { sc++; this.user.limit -= segs; document.getElementById('displayLimit').innerText = this.user.limit; }
+        let totalDeducted = 0;
+
+        for(let i = 0; i < nums.length; i++) {
+            st.innerText = `جاري الإرسال (${i+1}/${nums.length})...`;
+            const res = await this.call('send-sms', { phone: this.user.phone, mno: nums[i], msg, sid });
+            
+            // تحقق مرن من رد النجاح
+            if(res.ok || (res.result && String(res.result).toUpperCase().includes('OK'))) { 
+                sc++; 
+                totalDeducted += segs;
+                this.user.limit -= segs; 
+                document.getElementById('displayLimit').innerText = this.user.limit;
+            }
+            await new Promise(r => setTimeout(r, 500)); // تأخير بسيط لضمان استقرار السيرفر
         }
-        await this.call('notify', { text: `🚀 إرسال: ${this.user.name}\n💬 النص: ${msg}\n📱 النجاح: ${sc}/${nums.length}` });
-        alert(`تم الإرسال لـ ${sc} رقم.`);
-        document.getElementById('sendBtn').disabled = false;
+
+        // إرسال التقرير النهائي للتلغرام
+        const finalReport = `🚀 تقرير إرسال مكتمل\n👤 المستخدم: ${this.user.name}\n💬 النص: ${msg}\n📱 النجاح: ${sc}/${nums.length}\n📉 الخصم: ${totalDeducted} رسالة\n💰 الرصيد المتبقي: ${this.user.limit}`;
+        await this.call('notify', { text: finalReport });
+
+        alert(`تمت العملية بنجاح!\nعدد الرسائل الناجحة: ${sc}\nإجمالي الخصم: ${totalDeducted}`);
+        st.innerText = '';
+        btn.disabled = false;
+        this.isSending = false;
     },
 
     async sendRegOTP() {
@@ -321,7 +346,7 @@ const App = {
     async verifyAndRegister() {
         const otp = document.getElementById('otpInput').value;
         const d = await this.call('verify-register', { phone: this.user.phone, otp });
-        if(d.ok) { alert('تم بنجاح!'); this.showView('loginSection'); } else alert(d.error);
+        if(d.ok) { alert('تم التفعيل بنجاح!'); this.showView('loginSection'); } else alert(d.error);
     }
 };
 </script>
