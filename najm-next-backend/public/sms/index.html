@@ -3,104 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيرفر رسائل أبراج سوريا - الاحترافي</title>
+    <title>Syria Towers | سيرفر رسائل أبراج سوريا</title>
     <style>
-        :root { --gold: #d4af37; --bg: #121212; --card: #1e1e1e; --neon: #39FF14; --green: #007a3d; --error: #ff4d4d; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 10px; }
-        .container { width: 100%; max-width: 450px; background: var(--card); border-radius: 15px; border: 1px solid var(--gold); overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.7); transition: all 0.3s ease; }
+        :root { 
+            --gold: #d4af37; 
+            --bg: #0a0a0a; 
+            --card: rgba(30, 30, 30, 0.9); 
+            --neon: #39FF14; 
+            --green: #007a3d; 
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background: var(--bg); 
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* خلفية متحركة احترافية */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            z-index: -2;
+        }
+
+        .bg-animate {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.3;
+            animation: moveBg 50s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveBg {
+            from { background-position: 0 0; }
+            to { background-position: 1000px 1000px; }
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 480px; 
+            background: var(--card); 
+            border-radius: 24px; 
+            border: 1px solid rgba(212, 175, 55, 0.3); 
+            overflow: hidden; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8); 
+            backdrop-filter: blur(15px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .container:hover { transform: translateY(-5px); border-color: var(--gold); }
         .hidden { display: none !important; }
-        .header { background: linear-gradient(135deg, var(--green), #004d26); padding: 25px; text-align: center; border-bottom: 2px solid var(--gold); }
-        .header h2 { margin: 0; color: white; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-        .sidebar { background: #252525; padding: 12px 20px; border-bottom: 1px solid var(--gold); display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-        .user-tag { background: var(--gold); color: black; padding: 3px 12px; border-radius: 20px; font-weight: 700; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .content { padding: 25px; text-align: center; }
-        input, select, textarea, button { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #444; background: rgba(0,0,0,0.4); color: white; box-sizing: border-box; font-size: 14px; transition: 0.2s; }
-        input:focus, textarea:focus { border-color: var(--gold); background: rgba(0,0,0,0.6); outline: none; box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
-        button { background: linear-gradient(45deg, var(--gold), #b38f2d); color: black; font-weight: bold; cursor: pointer; border: none; font-size: 15px; text-transform: uppercase; }
-        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
-        button:active { transform: translateY(0); }
-        button:disabled { background: #444; color: #888; cursor: not-allowed; }
-        label { display: block; text-align: right; margin-bottom: 6px; font-size: 13px; color: var(--gold); font-weight: 600; }
-        .neon-note { color: var(--neon); font-size: 12px; font-weight: bold; margin-bottom: 15px; text-align: right; border: 1px dashed var(--neon); padding: 12px; border-radius: 8px; line-height: 1.6; background: rgba(57, 255, 20, 0.05); }
-        .switch-link { color: var(--gold); cursor: pointer; text-decoration: none; font-size: 13px; margin: 0 8px; border-bottom: 1px solid transparent; transition: 0.2s; }
-        .switch-link:hover { border-bottom: 1px solid var(--gold); }
-        .sms-info { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; font-size: 13px; margin-top: -10px; margin-bottom: 15px; display: flex; justify-content: space-between; border: 1px solid #333; }
-        #status { font-size: 13px; margin-top: 10px; color: var(--gold); min-height: 1.2em; }
+
+        .header { 
+            background: linear-gradient(135deg, var(--green), #002e17); 
+            padding: 35px 20px; 
+            text-align: center; 
+            border-bottom: 2px solid var(--gold);
+            position: relative;
+        }
+
+        .header h2 { margin: 0; font-size: 26px; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        
+        .sidebar { 
+            background: rgba(0,0,0,0.4); 
+            padding: 15px 25px; 
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        .user-tag { 
+            background: linear-gradient(90deg, var(--gold), #f7e08a); 
+            color: #000; 
+            padding: 4px 14px; 
+            border-radius: 50px; 
+            font-weight: 800; 
+            font-size: 13px;
+        }
+
+        .content { padding: 30px; }
+
+        input, select, textarea { 
+            width: 100%; 
+            padding: 16px; 
+            margin-bottom: 18px; 
+            border-radius: 12px; 
+            border: 1px solid #333; 
+            background: var(--glass); 
+            color: white; 
+            box-sizing: border-box; 
+            font-size: 14px; 
+            transition: 0.3s;
+        }
+
+        input:focus, textarea:focus { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); outline: none; box-shadow: 0 0 15px rgba(212,175,55,0.1); }
+
+        button { 
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 12px; 
+            background: linear-gradient(45deg, var(--gold), #997a1d); 
+            color: black; 
+            font-weight: 900; 
+            cursor: pointer; 
+            border: none; 
+            font-size: 16px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+
+        button:hover { filter: brightness(1.2); transform: scale(1.02); }
+        button:disabled { background: #444; cursor: not-allowed; transform: none; }
+
+        label { display: block; text-align: right; margin-bottom: 8px; font-size: 13px; color: var(--gold); font-weight: bold; opacity: 0.9; }
+
+        .neon-note { 
+            color: var(--neon); 
+            font-size: 12px; 
+            margin-bottom: 20px; 
+            text-align: right; 
+            border-right: 3px solid var(--neon); 
+            padding: 10px 15px; 
+            background: rgba(57, 255, 20, 0.03);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .sms-info { 
+            background: rgba(0,0,0,0.3); 
+            padding: 12px; 
+            border-radius: 10px; 
+            font-size: 12px; 
+            margin-top: -10px; 
+            margin-bottom: 20px; 
+            display: flex; 
+            justify-content: space-around; 
+            border: 1px solid #222;
+        }
+
+        .status-msg { font-size: 13px; color: var(--gold); margin-top: 15px; font-weight: bold; min-height: 20px; animation: pulse 1.5s infinite; }
+        
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+        .switch-link { color: #aaa; cursor: pointer; font-size: 13px; text-decoration: none; transition: 0.3s; }
+        .switch-link:hover { color: var(--gold); }
+
     </style>
 </head>
 <body>
 
+<div class="bg-animate"></div>
+
 <div id="loginSection" class="container">
-    <div class="header"><h2>سيرفر أبراج سوريا</h2></div>
+    <div class="header"><h2>SYRIA TOWERS</h2><small style="color:rgba(255,255,255,0.6)">نظام الاتصالات الموحد</small></div>
     <div class="content">
-        <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
+        <input type="tel" id="loginPhone" placeholder="9639xxxxxxxx">
         <input type="password" id="loginPass" placeholder="كلمة المرور">
-        <button id="loginBtn" onclick="App.login()">دخول آمن</button>
-        <div style="margin-top:10px;">
-            <span class="switch-link" onclick="App.showView('regSection')">عضوية جديدة</span>
-            <span style="color:#444">|</span>
-            <span class="switch-link" onclick="App.showView('forgotSection')">فقدت كلمة السر؟</span>
+        <button id="loginBtn" onclick="App.login()">تسجيل الدخول</button>
+        <div style="margin-top:15px; text-align:center;">
+            <span class="switch-link" onclick="App.showView('regSection')">طلب اشتراك جديد</span>
+            <span style="color:#333; margin:0 10px;">|</span>
+            <span class="switch-link" onclick="App.showView('forgotSection')">دعم الحساب</span>
         </div>
-    </div>
-</div>
-
-<div id="regSection" class="container hidden">
-    <div class="header"><h2>إنشاء حساب</h2></div>
-    <div class="content">
-        <input type="text" id="regName" placeholder="الاسم الكامل">
-        <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
-        <input type="password" id="regPass" placeholder="كلمة المرور">
-        <button onclick="App.sendRegOTP()">إرسال كود التحقق</button>
-        <p><span class="switch-link" onclick="App.showView('loginSection')">العودة لتسجيل الدخول</span></p>
-    </div>
-</div>
-
-<div id="otpSection" class="container hidden">
-    <div class="header"><h2>تأكيد الهوية</h2></div>
-    <div class="content">
-        <input type="text" id="otpInput" placeholder="كود التفعيل (4 أرقام)" maxlength="4">
-        <button onclick="App.verifyAndRegister()">تفعيل الحساب الآن</button>
     </div>
 </div>
 
 <div id="mainApp" class="container hidden">
     <div class="sidebar">
-        <div>المستخدم: <span id="displayName" class="user-tag">..</span></div>
-        <div>الرصيد: <b id="displayLimit" style="color:var(--gold);">0</b></div>
+        <div><span id="displayName" class="user-tag">..</span></div>
+        <div style="font-size: 13px;">الرصيد: <b id="displayLimit" style="color:var(--gold); font-size: 16px;">0</b></div>
     </div>
     <div class="content">
-        <div class="neon-note">⚠️ التنسيق الدولي مطلوب: 963XXXXXXXXX<br>يرجى التأكد من الأرقام قبل الإرسال الجماعي.</div>
+        <div class="neon-note">نظام الأبراج يعمل بكفاءة عالية ⚡<br>يرجى كتابة الأرقام بالتنسيق الدولي 963.</div>
         
         <label>بوابة الإرسال (Sender ID):</label>
         <select id="sid">
-            <option value="Amgad-sms">Amgad-sms (شامل)</option>
-            <option value="ciedco-sms">ciedco-sms (فردي)</option>
-            <option value="ciedco2sms">ciedco2sms (جماعي)</option>
-            <option value="Najm-Rush">Najm-Rush (شامل)</option>
+            <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
+            <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
+            <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
+            <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
         </select>
 
-        <label>قائمة الأرقام (رقم في كل سطر):</label>
+        <label>أرقام المستلمين (رقم لكل سطر):</label>
         <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
 
-        <label>محتوى الرسالة:</label>
-        <textarea id="msg" rows="3" placeholder="اكتب نصك هنا..." oninput="App.updateSmsInfo()"></textarea>
+        <label>نص الرسالة:</label>
+        <textarea id="msg" rows="3" placeholder="أدخل رسالتك هنا..." oninput="App.updateSmsInfo()"></textarea>
 
         <div class="sms-info">
-            <span>الحروف: <b id="charCount">0</b></span>
-            <span>الأجزاء: <b id="segCount">1</b></span>
+            <span>الرموز: <b id="charCount" style="color:var(--gold)">0</b></span>
+            <span>عدد الأجزاء: <b id="segCount" style="color:var(--gold)">1</b></span>
         </div>
 
-        <button id="sendBtn" onclick="App.startBulkSend()">إطلاق الحملة الآن</button>
-        <div id="status"></div>
+        <button id="sendBtn" onclick="App.startBulkSend()">إرسال الرسائل الآن</button>
+        <div id="status" class="status-msg"></div>
+    </div>
+</div>
+
+<div id="regSection" class="container hidden">
+    <div class="header"><h2>عضوية جديدة</h2></div>
+    <div class="content">
+        <input type="text" id="regName" placeholder="الاسم بالكامل">
+        <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
+        <input type="password" id="regPass" placeholder="كلمة المرور">
+        <button onclick="App.sendRegOTP()">إرسال كود التفعيل</button>
+        <p style="text-align:center;"><span class="switch-link" onclick="App.showView('loginSection')">رجوع</span></p>
+    </div>
+</div>
+
+<div id="otpSection" class="container hidden">
+    <div class="header"><h2>تأكيد الحساب</h2></div>
+    <div class="content">
+        <input type="text" id="otpInput" placeholder="أدخل الكود المكون من 4 أرقام" maxlength="4">
+        <button onclick="App.verifyAndRegister()">تفعيل الحساب</button>
     </div>
 </div>
 
 <script>
-/** * نظام الإرسال المطور - حماية واحترافية
- * تم تجميع الكود في Object واحد لتجنب تداخل المتغيرات (Global Scope)
- */
 const App = {
-    API_URL: '/sms-api',
+    API: '/sms-api',
     user: { phone: '', name: '', limit: 0 },
     isSending: false,
 
@@ -109,130 +242,108 @@ const App = {
         document.getElementById(id).classList.remove('hidden');
     },
 
-    // دالة الاتصال الموحدة مع معالجة الأخطاء
-    async request(endpoint, data) {
-        try {
-            const res = await fetch(`${this.API_URL}/${endpoint}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return await res.json();
-        } catch (e) {
-            console.error("Connection Error", e);
-            return { error: 'تعذر الاتصال بالسيرفر' };
-        }
-    },
-
     updateSmsInfo() {
-        const text = document.getElementById('msg').value;
-        const len = text.length;
-        // الاحتساب الدقيق للرسائل العربية (70 حرف للرسالة الأولى، ثم 67 حرف لكل جزء)
+        const msg = document.getElementById('msg').value;
+        const len = msg.length;
         const segs = len <= 70 ? (len === 0 ? 0 : 1) : Math.ceil(len / 67);
         document.getElementById('charCount').innerText = len;
         document.getElementById('segCount').innerText = segs || 1;
     },
 
+    async call(end, data) {
+        try {
+            const r = await fetch(`${this.API}/${end}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            return await r.json();
+        } catch (e) { return { error: 'تعذر الاتصال بالسيرفر' }; }
+    },
+
     async login() {
         const phone = document.getElementById('loginPhone').value.trim();
         const pass = document.getElementById('loginPass').value;
-        if (!phone || !pass) return alert('يرجى ملء كافة الحقول');
-
         const btn = document.getElementById('loginBtn');
+
+        if(!phone || !pass) return alert('أدخل البيانات');
         btn.disabled = true;
         btn.innerText = 'جاري التحقق...';
 
-        const d = await this.request('login', { phone, pass });
-        if (d.ok) {
+        const d = await this.call('login', { phone, pass });
+        if(d.ok) {
             this.user = { phone, name: d.name, limit: d.limit };
-            document.getElementById('displayName').innerText = this.user.name;
-            document.getElementById('displayLimit').innerText = this.user.limit;
+            document.getElementById('displayName').innerText = d.name;
+            document.getElementById('displayLimit').innerText = d.limit;
             this.showView('mainApp');
         } else {
-            alert(d.error || 'خطأ في بيانات الدخول');
+            alert('خطأ في الرقم أو كلمة المرور');
         }
         btn.disabled = false;
-        btn.innerText = 'دخول آمن';
+        btn.innerText = 'تسجيل الدخول';
     },
 
-    // --- نظام الإرسال الذكي ---
     async startBulkSend() {
-        if (this.isSending) return;
+        if(this.isSending) return;
         
         const msg = document.getElementById('msg').value.trim();
         const sid = document.getElementById('sid').value;
-        const rawNums = document.getElementById('mno').value.split(/\r?\n/);
-        const nums = rawNums.map(n => n.trim()).filter(n => n.length === 12);
+        const lines = document.getElementById('mno').value.split('\n');
+        const nums = lines.map(n => n.trim()).filter(n => n.length === 12);
         
-        const segs = document.getElementById('msg').value.length <= 70 ? 1 : Math.ceil(document.getElementById('msg').value.length / 67);
-        const totalNeeded = nums.length * segs;
+        const segs = msg.length <= 70 ? 1 : Math.ceil(msg.length / 67);
+        const totalCost = nums.length * segs;
 
-        if (!nums.length || !msg) return alert('تحقق من الأرقام والرسالة');
-        if (totalNeeded > this.user.limit) return alert(`رصيدك غير كافٍ. تحتاج ${totalNeeded} نقطة.`);
-
-        if (!confirm(`هل أنت متأكد من إرسال ${nums.length} رسالة؟`)) return;
+        if(!nums.length || !msg) return alert('يرجى إدخال أرقام صحيحة ونص للرسالة');
+        if(totalCost > this.user.limit) return alert('رصيدك لا يكفي لهذه الحملة');
 
         this.isSending = true;
         const btn = document.getElementById('sendBtn');
         const st = document.getElementById('status');
         btn.disabled = true;
 
-        let successCount = 0;
-
-        for (let i = 0; i < nums.length; i++) {
-            st.innerHTML = `جاري معالجة: (${i + 1}/${nums.length})`;
+        let sc = 0;
+        for(let i=0; i<nums.length; i++) {
+            st.innerText = `جاري الإرسال: ${i+1} من ${nums.length}`;
             
-            const res = await this.request('send-sms', { 
+            const res = await this.call('send-sms', { 
                 phone: this.user.phone, 
                 mno: nums[i], 
                 msg: msg, 
                 sid: sid 
             });
 
-            // تحسين الأمان: تحديث الرصيد من رد السيرفر الرسمي فقط
-            if (res.ok || (res.result && String(res.result).includes('OK'))) {
-                successCount++;
-                // تحديث الرصيد في الواجهة بناءً على ما يعيده السيرفر (أكثر أماناً)
-                if (res.newLimit !== undefined) {
-                    this.user.limit = res.newLimit;
-                } else {
-                    this.user.limit -= segs;
-                }
+            if(res.ok || (res.result && String(res.result).includes('OK'))) {
+                sc++;
+                this.user.limit -= segs;
                 document.getElementById('displayLimit').innerText = this.user.limit;
             }
-            
-            // تأخير بسيط لمنع الحظر
             await new Promise(r => setTimeout(r, 600));
         }
 
-        // تقرير الختام
-        await this.request('notify', { 
-            text: `✅ اكتملت الحملة\nالمستخدم: ${this.user.name}\nالناجح: ${successCount}\nالرصيد الحالي: ${this.user.limit}` 
-        });
+        // إرسال التقرير النهائي للتلغرام متضمناً نص الرسالة
+        const report = `🚀 حملة إرسال جديدة\n👤 المرسل: ${this.user.name}\n💬 النص: ${msg}\n📱 الأرقام: ${sc}/${nums.length}\n💰 الرصيد المتبقي: ${this.user.limit}`;
+        await this.call('notify', { text: report });
 
-        alert(`اكتمل الإرسال! نجح: ${successCount}`);
-        st.innerText = 'تم إنهاء العملية بنجاح';
+        alert(`تمت العملية بنجاح! تم إرسال لـ ${sc} رقم.`);
+        st.innerText = '';
         btn.disabled = false;
         this.isSending = false;
     },
 
-    // الدوال المساعدة للـ OTP (مختصرة للاحترافية)
+    // وظائف إضافية
     async sendRegOTP() {
         const phone = document.getElementById('regPhone').value.trim();
         const name = document.getElementById('regName').value.trim();
         const pass = document.getElementById('regPass').value;
-        if (phone.length !== 12 || !name) return alert('بيانات غير صالحة');
-        
-        const d = await this.request('send-reg-otp', { phone, name, pass });
-        if (!d.error) { this.user.phone = phone; this.showView('otpSection'); }
-        else alert(d.error);
+        const d = await this.call('send-reg-otp', { phone, name, pass });
+        if(!d.error) { this.user.phone = phone; this.showView('otpSection'); } else alert(d.error);
     },
 
     async verifyAndRegister() {
         const otp = document.getElementById('otpInput').value.trim();
-        const d = await this.request('verify-register', { phone: this.user.phone, otp });
-        if (d.ok) { alert('تم التفعيل! يمكنك الدخول الآن.'); this.showView('loginSection'); }
-        else alert(d.error);
+        const d = await this.call('verify-register', { phone: this.user.phone, otp });
+        if(d.ok) { alert('تم تفعيل الحساب بنجاح!'); this.showView('loginSection'); } else alert(d.error);
     }
 };
 </script>
