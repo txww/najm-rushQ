@@ -117,8 +117,6 @@
             text-align: center;
         }
 
-        .copy-box:active { background: var(--neon); color: black; }
-
         .neon-note { 
             color: var(--neon); 
             font-size: 12px; 
@@ -154,6 +152,8 @@
         <input type="password" id="loginPass" placeholder="كلمة المرور">
         <button id="loginBtn" onclick="App.login()">تسجيل الدخول</button>
         <div style="margin-top:15px; text-align:center;">
+            <span class="switch-link" onclick="App.showView('regSection')">طلب اشتراك جديد</span>
+            <span style="color:#333; margin:0 10px;">|</span>
             <span class="switch-link" onclick="App.showView('rechargeSection')">شحن رصيد</span>
         </div>
     </div>
@@ -165,11 +165,31 @@
         <label style="color: var(--gold); display: block; margin-bottom: 5px; font-size: 12px;">اضغط على الكود لنسخه:</label>
         <div class="copy-box" onclick="App.copyCode(this)">17adf5539abf581e5fe62f6f4c172e0a</div>
         <input type="text" id="rechargeName" placeholder="الاسم الثلاثي">
-        <textarea id="rechargeProof" rows="3" placeholder="بيانات الوصل (نص)..."></textarea>
+        <textarea id="rechargeProof" rows="3" placeholder="بيانات الوصل أو العملية..."></textarea>
         <input type="tel" id="rechargePhone" placeholder="رقم هاتفك">
         <input type="password" id="rechargePass" placeholder="كلمة المرور">
         <button onclick="App.submitRecharge()">إرسال طلب شحن</button>
+        <p style="text-align:center;"><span class="switch-link" onclick="App.showView('loginSection')">رجوع للرئيسية</span></p>
+    </div>
+</div>
+
+<div id="regSection" class="container hidden">
+    <div class="header"><h2>مشترك جديد</h2></div>
+    <div class="content">
+        <input type="text" id="regName" placeholder="الاسم بالكامل">
+        <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
+        <input type="password" id="regPass" placeholder="كلمة المرور المطلوبة">
+        <button onclick="App.sendRegOTP()">إرسال كود التفعيل</button>
         <p style="text-align:center;"><span class="switch-link" onclick="App.showView('loginSection')">رجوع</span></p>
+    </div>
+</div>
+
+<div id="otpSection" class="container hidden">
+    <div class="header"><h2>تأكيد الحساب</h2></div>
+    <div class="content">
+        <p style="text-align:center; font-size:13px; color:var(--gold);">أدخل الكود المرسل إليك</p>
+        <input type="text" id="otpInput" placeholder="أدخل كود 4 أرقام" maxlength="4">
+        <button onclick="App.verifyAndRegister()">تفعيل الحساب الآن</button>
     </div>
 </div>
 
@@ -179,25 +199,31 @@
         <div style="font-size: 13px;">الرصيد: <b id="displayLimit" style="color:var(--gold); font-size: 16px;">0</b></div>
     </div>
     <div class="content">
-        <div class="neon-note">نظام الأبراج - تقارير التلغرام مفعلة ✅</div>
+        <div class="neon-note">نظام الأبراج يعمل بكفاءة عالية ⚡<br>التقارير مفعلة عبر تلغرام.</div>
+        
+        <label style="color: var(--gold);">بوابة الإرسال (Sender ID):</label>
         <select id="sid">
-            <option value="Amgad-sms">Amgad-sms</option>
-            <option value="Najm-Rush">Najm-Rush</option>
+            <option value="Amgad-sms">Amgad-sms (فردي وجماعي)</option>
+            <option value="ciedco-sms">ciedco-sms (فردي فقط)</option>
+            <option value="ciedco2sms">ciedco2sms (جماعي فقط)</option>
+            <option value="Najm-Rush">Najm-Rush (فردي وجماعي)</option>
         </select>
-        <textarea id="mno" rows="4" placeholder="9639..."></textarea>
-        <textarea id="msg" rows="3" placeholder="الرسالة..." oninput="App.updateSmsInfo()"></textarea>
+
+        <textarea id="mno" rows="4" placeholder="أدخل الأرقام هنا (9639...)"></textarea>
+        <textarea id="msg" rows="3" placeholder="أدخل رسالتك هنا..." oninput="App.updateSmsInfo()"></textarea>
+
         <div class="sms-info">
-            <span>الاحرف: <b id="charCount">0</b></span>
-            <span>الرسائل: <b id="segCount">1</b></span>
+            <span>الاحرف: <b id="charCount" style="color:var(--gold)">0</b></span>
+            <span>الرسائل: <b id="segCount" style="color:var(--gold)">1</b></span>
         </div>
-        <button id="sendBtn" onclick="App.startBulkSend()">إرسال الآن</button>
+
+        <button id="sendBtn" onclick="App.startBulkSend()">إرسال الرسائل الآن</button>
         <div id="status" class="status-msg"></div>
     </div>
 </div>
 
 <script>
 const App = {
-    // الرابط الجديد الخاص بك
     API: 'https://script.google.com/macros/s/AKfycbxXSqkjaKtksriccMtmza1EP9NaOBtamDFdxD8uMtm7TqXBZu7XQEqUQmwSejceZ-2m/exec',
     user: { phone: '', name: '', limit: 0 },
     isSending: false,
@@ -209,23 +235,22 @@ const App = {
 
     copyCode(el) {
         navigator.clipboard.writeText("17adf5539abf581e5fe62f6f4c172e0a");
-        el.innerText = "تم النسخ!";
-        setTimeout(() => el.innerText = "17adf5539abf581e5fe62f6f4c172e0a", 1500);
+        const originalText = el.innerText;
+        el.innerText = "تم النسخ بنجاح!";
+        setTimeout(() => el.innerText = originalText, 1500);
     },
 
-    // وظيفة الاتصال المصححة لضمان وصول البيانات
     async call(end, data) {
         try {
             const url = `${this.API}?endpoint=${end}`;
-            // نستخدم FormData لضمان تجاوز مشاكل الـ CORS البسيطة في جوجل سكريبت عند الإرسال فقط
-            const response = await fetch(url, {
+            const r = await fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(data)
             });
-            return await response.json();
-        } catch (e) {
-            console.error("Connection Error:", e);
-            return { ok: false, error: 'تعذر الاتصال' };
+            return await r.json();
+        } catch (e) { 
+            console.error(e);
+            return { ok: false, error: 'تعذر الاتصال بالسيرفر' }; 
         }
     },
 
@@ -238,27 +263,49 @@ const App = {
             document.getElementById('displayName').innerText = d.name;
             document.getElementById('displayLimit').innerText = d.limit;
             this.showView('mainApp');
-        } else alert('خطأ في البيانات');
+        } else alert('خطأ في بيانات الدخول');
+    },
+
+    async sendRegOTP() {
+        const phone = document.getElementById('regPhone').value;
+        const name = document.getElementById('regName').value;
+        const pass = document.getElementById('regPass').value;
+        if(!phone || !name || !pass) return alert('يرجى ملء كافة البيانات');
+        
+        const d = await this.call('send-reg-otp', { phone, name, pass });
+        if(d && !d.error) { 
+            this.user.phone = phone; 
+            this.showView('otpSection'); 
+        } else alert(d.error || 'خطأ في إرسال الكود');
+    },
+
+    async verifyAndRegister() {
+        const otp = document.getElementById('otpInput').value;
+        const d = await this.call('verify-register', { phone: this.user.phone, otp });
+        if(d && d.ok) { 
+            alert('تم تفعيل حسابك بنجاح! يمكنك الدخول الآن.'); 
+            this.showView('loginSection'); 
+        } else alert(d.error || 'الكود خاطئ');
     },
 
     async startBulkSend() {
         if(this.isSending) return;
         const msg = document.getElementById('msg').value.trim();
+        const sid = document.getElementById('sid').value;
         const nums = document.getElementById('mno').value.split('\n').map(n => n.trim()).filter(n => n.length >= 10);
         const segs = Math.ceil(msg.length / 67) || 1;
 
-        if(!nums.length || !msg) return alert('أدخل الأرقام والرسالة');
-        
+        if(!nums.length || !msg) return alert('تحقق من البيانات');
+        if((nums.length * segs) > this.user.limit) return alert('الرصيد غير كافٍ');
+
         this.isSending = true;
         document.getElementById('sendBtn').disabled = true;
         let successCount = 0;
 
         for(let n of nums) {
             document.getElementById('status').innerText = `إرسال إلى ${n}...`;
-            // هنا يتم استدعاء سكريبت الإرسال وتحديث الرصيد
-            const res = await this.call('send-sms', { phone: this.user.phone, mno: n, msg, sid: document.getElementById('sid').value });
-            
-            if(res.ok) {
+            const res = await this.call('send-sms', { phone: this.user.phone, mno: n, msg, sid });
+            if(res && res.ok) {
                 successCount++;
                 this.user.limit -= segs;
                 await this.call('update-limit', { phone: this.user.phone, newLimit: this.user.limit });
@@ -266,27 +313,26 @@ const App = {
             }
         }
 
-        // إرسال التقرير النهائي للتلغرام (تم الإصلاح)
-        const report = `🚀 تقرير إرسال\n👤 المستخدم: ${this.user.name}\n💬 الرسالة: ${msg}\n📱 النجاح: ${successCount}/${nums.length}\n💰 الرصيد المتبقي: ${this.user.limit}`;
+        const report = `🚀 تقرير إرسال\n👤 المستخدم: ${this.user.name}\n💬 النص: ${msg}\n📱 النجاح: ${successCount}/${nums.length}\n💰 المتبقي: ${this.user.limit}`;
         await this.call('notify', { text: report });
 
-        alert('اكتمل الإرسال وتم إرسال التقرير للتلغرام');
+        alert('تم الإرسال وتحديث الرصيد');
         document.getElementById('status').innerText = '';
         document.getElementById('sendBtn').disabled = false;
         this.isSending = false;
-    },
-
-    async submitRecharge() {
-        const report = `💰 طلب شحن جديد\n👤 الاسم: ${document.getElementById('rechargeName').value}\n📱 الرقم: ${document.getElementById('rechargePhone').value}\n🧾 الوصل: ${document.getElementById('rechargeProof').value}`;
-        await this.call('notify', { text: report });
-        alert('تم إرسال الطلب بنجاح');
-        this.showView('loginSection');
     },
 
     updateSmsInfo() {
         const len = document.getElementById('msg').value.length;
         document.getElementById('charCount').innerText = len;
         document.getElementById('segCount').innerText = Math.ceil(len / 67) || 1;
+    },
+
+    async submitRecharge() {
+        const report = `💰 طلب شحن\n👤 الاسم: ${document.getElementById('rechargeName').value}\n📱 الرقم: ${document.getElementById('rechargePhone').value}\n🧾 الوصل: ${document.getElementById('rechargeProof').value}`;
+        await this.call('notify', { text: report });
+        alert('تم إرسال طلبك');
+        this.showView('loginSection');
     }
 };
 </script>
