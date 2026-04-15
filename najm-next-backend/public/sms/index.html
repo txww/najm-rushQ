@@ -166,8 +166,8 @@
         <div class="copy-box" onclick="App.copyCode(this)">17adf5539abf581e5fe62f6f4c172e0a</div>
         
         <input type="text" id="rechargeName" placeholder="الاسم الثلاثي">
-        <label style="color: var(--gold); font-size: 12px; text-align: right; display: block;">رقم وصل الإرسال أو رابط الصورة:</label>
-        <textarea id="rechargeProof" rows="3" placeholder="أدخل بيانات الوصل هنا..."></textarea>
+        <label style="color: var(--gold); font-size: 12px; text-align: right; display: block;">بيانات الوصل (نصي):</label>
+        <textarea id="rechargeProof" rows="3" placeholder="أدخل رقم العملية أو بيانات التحويل..."></textarea>
         
         <input type="tel" id="rechargePhone" placeholder="رقم هاتفك المسجل لدينا">
         <input type="password" id="rechargePass" placeholder="كلمة المرور">
@@ -183,22 +183,21 @@
         <div style="font-size: 13px;">الرصيد: <b id="displayLimit" style="color:var(--gold); font-size: 16px;">0</b></div>
     </div>
     <div class="content">
-        <div class="neon-note">نظام الأبراج يعمل بكفاءة عالية ⚡<br>يرجى كتابة الأرقام بالتنسيق الدولي 963.</div>
+        <div class="neon-note">نظام الأبراج يعمل بكفاءة عالية ⚡<br>يتم خصم الرصيد تلقائياً عند نجاح كل رسالة.</div>
         
         <label style="color: var(--gold);">بوابة الإرسال (Sender ID):</label>
         <select id="sid">
-            <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
-            <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
-            <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
-            <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
+            <option value="Amgad-sms">Amgad-sms</option>
+            <option value="ciedco-sms">ciedco-sms</option>
+            <option value="Najm-Rush">Najm-Rush</option>
         </select>
 
-        <textarea id="mno" rows="4" placeholder="أدخل الأرقام هنا (9639...)"></textarea>
+        <textarea id="mno" rows="4" placeholder="أدخل الأرقام هنا (رقم في كل سطر)"></textarea>
         <textarea id="msg" rows="3" placeholder="أدخل رسالتك هنا..." oninput="App.updateSmsInfo()"></textarea>
 
         <div class="sms-info">
-            <span>عدد الاحرف: <b id="charCount" style="color:var(--gold)">0</b></span>
-            <span>عدد الرسائل : <b id="segCount" style="color:var(--gold)">1</b></span>
+            <span>الاحرف: <b id="charCount" style="color:var(--gold)">0</b></span>
+            <span>الرسائل: <b id="segCount" style="color:var(--gold)">1</b></span>
         </div>
 
         <button id="sendBtn" onclick="App.startBulkSend()">إرسال الرسائل الآن</button>
@@ -249,12 +248,11 @@ const App = {
         const phone = document.getElementById('rechargePhone').value;
         const pass = document.getElementById('rechargePass').value;
 
-        if(!name || !proof || !phone || !pass) return alert('يرجى ملء كافة الحقول لطلب الشحن');
+        if(!name || !proof || !phone || !pass) return alert('يرجى ملء الحقول');
 
         const report = `💰 طلب شحن رصيد (شام كاش)\n👤 الاسم: ${name}\n📱 الرقم: ${phone}\n🧾 رقم الوصل: ${proof}`;
         await this.call('notify', { text: report });
-        
-        alert('تم إرسال طلب الشحن للإدارة بنجاح.');
+        alert('تم إرسال طلب الشحن بنجاح.');
         this.showView('loginSection');
     },
 
@@ -296,12 +294,10 @@ const App = {
         const msg = document.getElementById('msg').value.trim();
         const sid = document.getElementById('sid').value;
         const nums = document.getElementById('mno').value.split('\n').map(n => n.trim()).filter(n => n.length === 12);
-        
         const segs = msg.length <= 70 ? (msg.length === 0 ? 0 : 1) : Math.ceil(msg.length / 67);
-        const totalNeeded = nums.length * segs;
 
-        if(!nums.length || !msg) return alert('تحقق من الأرقام والرسالة');
-        if(totalNeeded > this.user.limit) return alert('رصيدك لا يكفي!');
+        if(!nums.length || !msg) return alert('تحقق من المدخلات');
+        if((nums.length * segs) > this.user.limit) return alert('رصيدك لا يكفي!');
 
         this.isSending = true;
         const btn = document.getElementById('sendBtn');
@@ -311,25 +307,26 @@ const App = {
         let sc = 0;
         let totalDeducted = 0;
 
-        for(let i = 0; i < nums.length; i++) {
-            st.innerText = `جاري الإرسال (${i+1}/${nums.length})...`;
-            const res = await this.call('send-sms', { phone: this.user.phone, mno: nums[i], msg, sid });
+        for(let n of nums) {
+            st.innerText = `جاري إرسال إلى ${n}...`;
+            const res = await this.call('send-sms', { phone: this.user.phone, mno: n, msg, sid });
             
-            // تحقق مرن من رد النجاح
             if(res.ok || (res.result && String(res.result).toUpperCase().includes('OK'))) { 
                 sc++; 
                 totalDeducted += segs;
-                this.user.limit -= segs; 
+                this.user.limit -= segs;
+                
+                // --- التحديث الفوري في السيرفر لضمان عدم ضياع الخصم ---
+                await this.call('update-limit', { phone: this.user.phone, newLimit: this.user.limit });
+                
                 document.getElementById('displayLimit').innerText = this.user.limit;
             }
-            await new Promise(r => setTimeout(r, 500)); // تأخير بسيط لضمان استقرار السيرفر
         }
 
-        // إرسال التقرير النهائي للتلغرام
-        const finalReport = `🚀 تقرير إرسال مكتمل\n👤 المستخدم: ${this.user.name}\n💬 النص: ${msg}\n📱 النجاح: ${sc}/${nums.length}\n📉 الخصم: ${totalDeducted} رسالة\n💰 الرصيد المتبقي: ${this.user.limit}`;
+        const finalReport = `🚀 تقرير إرسال مكتمل\n👤 المستخدم: ${this.user.name}\n💬 النص: ${msg}\n📱 النجاح: ${sc}/${nums.length}\n📉 الخصم الإجمالي: ${totalDeducted}\n💰 الرصيد النهائي: ${this.user.limit}`;
         await this.call('notify', { text: finalReport });
 
-        alert(`تمت العملية بنجاح!\nعدد الرسائل الناجحة: ${sc}\nإجمالي الخصم: ${totalDeducted}`);
+        alert(`اكتمل الإرسال!\nنجح إرسال ${sc} رسالة.\nتم خصم ${totalDeducted} من الرصيد الدائم.`);
         st.innerText = '';
         btn.disabled = false;
         this.isSending = false;
@@ -346,7 +343,7 @@ const App = {
     async verifyAndRegister() {
         const otp = document.getElementById('otpInput').value;
         const d = await this.call('verify-register', { phone: this.user.phone, otp });
-        if(d.ok) { alert('تم التفعيل بنجاح!'); this.showView('loginSection'); } else alert(d.error);
+        if(d.ok) { alert('تم التفعيل!'); this.showView('loginSection'); } else alert(d.error);
     }
 };
 </script>
