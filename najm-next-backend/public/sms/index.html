@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيرفير رسائل شركة نجم راش | سيرفر رسائل أبراج سوريا</title>
+    <title>سيرفير شركة نجم راش | أبراج سوريا</title>
     <style>
         :root { 
             --gold: #d4af37; 
@@ -15,7 +15,7 @@
         }
 
         body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: var(--bg); 
             color: white; 
             display: flex; 
@@ -27,6 +27,7 @@
             position: relative;
         }
 
+        /* تأثير النجوم المتحركة في الخلفية */
         body::before {
             content: "";
             position: fixed;
@@ -51,41 +52,55 @@
             max-width: 480px; 
             background: var(--card); 
             border-radius: 24px; 
-            border: 1px solid rgba(212, 175, 55, 0.3); 
+            border: 1px solid rgba(212, 175, 55, 0.2); 
             overflow: hidden; 
             box-shadow: 0 25px 50px rgba(0,0,0,0.8); 
             backdrop-filter: blur(15px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s ease;
             position: relative;
         }
 
-        .container:hover { transform: translateY(-5px); border-color: var(--gold); }
+        .container:hover { border-color: var(--gold); transform: translateY(-3px); }
         .hidden { display: none !important; }
 
         .header { 
             background: linear-gradient(135deg, var(--green), #002e17); 
-            padding: 35px 20px; 
+            padding: 30px 20px; 
             text-align: center; 
             border-bottom: 2px solid var(--gold);
         }
 
-        .header h2 { margin: 0; font-size: 26px; letter-spacing: 1px; }
+        .header h2 { margin: 0; font-size: 24px; letter-spacing: 1px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
 
-        .content { padding: 30px; }
+        .sidebar { 
+            background: rgba(0,0,0,0.4); 
+            padding: 15px 25px; 
+            border-bottom: 1px solid rgba(212,175,55,0.1); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        .user-tag { background: var(--gold); color: black; padding: 4px 14px; border-radius: 50px; font-weight: bold; font-size: 13px; }
+
+        .content { padding: 25px; }
+
+        label { display: block; text-align: right; margin-bottom: 8px; font-size: 13px; color: var(--gold); font-weight: bold; }
 
         input, select, textarea { 
             width: 100%; 
-            padding: 16px; 
-            margin-bottom: 18px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
             border-radius: 12px; 
             border: 1px solid #333; 
             background: var(--glass); 
             color: white; 
             box-sizing: border-box; 
             font-size: 14px; 
+            transition: 0.3s;
         }
 
-        input:focus, textarea:focus { border-color: var(--gold); outline: none; background: rgba(212, 175, 55, 0.05); }
+        input:focus, textarea:focus { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); outline: none; }
 
         button { 
             width: 100%; 
@@ -98,9 +113,27 @@
             border: none; 
             font-size: 16px; 
             transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        button:hover { filter: brightness(1.2); transform: scale(1.02); }
+        button:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.01); }
+        button:disabled { background: #444; color: #777; cursor: not-allowed; }
+
+        .copy-box {
+            background: rgba(57, 255, 20, 0.08);
+            border: 1px dashed var(--neon);
+            color: var(--neon);
+            padding: 14px;
+            font-family: monospace;
+            font-size: 13px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .copy-box:active { background: var(--neon); color: black; }
 
         .neon-note { 
             color: var(--neon); 
@@ -110,36 +143,17 @@
             border-right: 3px solid var(--neon); 
             padding: 10px 15px; 
             background: rgba(57, 255, 20, 0.03);
-            border-radius: 0 8px 8px 0;
         }
 
-        .copy-box {
-            background: rgba(57, 255, 20, 0.1);
-            border: 1px dashed var(--neon);
-            color: var(--neon);
-            padding: 12px;
-            font-family: monospace;
-            font-size: 13px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            word-break: break-all;
-            text-align: center;
-        }
-
-        .copy-box:active { background: var(--neon); color: black; }
-
-        .switch-link { color: #aaa; cursor: pointer; font-size: 13px; text-decoration: none; }
-        .switch-link:hover { color: var(--gold); }
-        
         .sms-info { 
             background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; font-size: 12px; 
             margin-bottom: 20px; display: flex; justify-content: space-around; border: 1px solid #222;
         }
 
-        .user-tag { background: var(--gold); color: black; padding: 4px 12px; border-radius: 50px; font-weight: bold; }
-        .sidebar { background: rgba(0,0,0,0.4); padding: 15px 25px; border-bottom: 1px solid rgba(212,175,55,0.2); display: flex; justify-content: space-between; align-items: center; }
-
+        .switch-link { color: #aaa; cursor: pointer; font-size: 13px; text-decoration: none; transition: 0.3s; }
+        .switch-link:hover { color: var(--gold); }
+        
+        .status-msg { text-align: center; font-size: 13px; color: var(--gold); margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -147,13 +161,13 @@
 <div class="bg-animate"></div>
 
 <div id="loginSection" class="container">
-    <div class="header"><h2>سيرفير أبراج سوريا</h2><small style="color:rgba(255,255,255,0.6)">نظام الاتصالات الموحد</small></div>
+    <div class="header"><h2>سيرفير أبراج سوريا</h2><small style="color:rgba(255,255,255,0.5)">بوابة شركة نجم راش للاتصالات</small></div>
     <div class="content">
-        <input type="tel" id="loginPhone" placeholder="9639xxxxxxxx">
+        <input type="tel" id="loginPhone" placeholder="رقم الهاتف (9639...)">
         <input type="password" id="loginPass" placeholder="كلمة المرور">
         <button id="loginBtn" onclick="App.login()">تسجيل الدخول</button>
-        <div style="margin-top:15px; text-align:center;">
-            <span class="switch-link" onclick="App.showView('regSection')">طلب اشتراك جديد</span>
+        <div style="margin-top:20px; text-align:center;">
+            <span class="switch-link" onclick="App.showView('regSection')">مشترك جديد</span>
             <span style="color:#333; margin:0 10px;">|</span>
             <span class="switch-link" onclick="App.showView('rechargeSection')">شحن رصيد</span>
         </div>
@@ -163,66 +177,73 @@
 <div id="rechargeSection" class="container hidden">
     <div class="header"><h2>شحن رصيد (شام كاش)</h2></div>
     <div class="content">
-        <label style="color: var(--gold); display: block; margin-bottom: 5px; font-size: 12px;">اضغط على الكود لنسخه:</label>
+        <label>انسخ كود الحساب للتحويل:</label>
         <div class="copy-box" onclick="App.copyCode(this)">17adf5539abf581e5fe62f6f4c172e0a</div>
         
-        <input type="text" id="rechargeName" placeholder="الاسم الثلاثي">
-        <label style="color: var(--gold); font-size: 12px; text-align: right; display: block;">وصل الإرسال (صورة أو نص):</label>
-        <textarea id="rechargeProof" rows="3" placeholder="أدخل رقم العملية أو رابط الصورة..."></textarea>
+        <input type="text" id="rechargeName" placeholder="الاسم الثلاثي للمرسل">
         
-        <input type="tel" id="rechargePhone" placeholder="رقم هاتفك المسجل لدينا">
-        <input type="password" id="rechargePass" placeholder="كلمة المرور">
+        <label>إرفاق صورة الوصل:</label>
+        <input type="file" id="rechargeFile" accept="image/*">
         
-        <button onclick="App.submitRecharge()">إرسال طلب شحن الرصيد</button>
-        <p style="text-align:center;"><span class="switch-link" onclick="App.showView('loginSection')">رجوع للرئيسية</span></p>
+        <label>أو نص الوصل (رقم العملية):</label>
+        <textarea id="rechargeProof" rows="2" placeholder="اكتب رقم العملية هنا..."></textarea>
+        
+        <input type="tel" id="rechargePhone" placeholder="رقم هاتفك المسجل بالسيرفر">
+        <input type="password" id="rechargePass" placeholder="كلمة المرور للتأكيد">
+        
+        <button id="rechargeBtn" onclick="App.submitRecharge()">إرسال طلب الشحن</button>
+        <p style="text-align:center;"><span class="switch-link" onclick="App.showView('loginSection')">إلغاء والرجوع</span></p>
     </div>
 </div>
 
 <div id="mainApp" class="container hidden">
     <div class="sidebar">
         <div><span id="displayName" class="user-tag">..</span></div>
-        <div style="font-size: 13px;">الرصيد: <b id="displayLimit" style="color:var(--gold); font-size: 16px;">0</b></div>
+        <div style="font-size: 13px;">الرصيد: <b id="displayLimit" style="color:var(--gold); font-size: 17px;">0</b></div>
     </div>
     <div class="content">
-        <div class="neon-note">نظام الأبراج يعمل بكفاءة عالية ⚡<br>يرجى كتابة الأرقام بدون صفر وبالتنسيق الدولي 963.</div>
+        <div class="neon-note">نظام الإرسال يعمل الآن بكفاءة ⚡<br>يرجى استخدام الصيغة 963 بدون أصفار.</div>
         
-        <label style="color: var(--gold);">بوابة الإرسال (Sender ID):</label>
+        <label>بوابة الإرسال (Sender ID):</label>
         <select id="sid">
-            <option value="Amgad-sms">Amgad-sms (مسموح رسائل فردية وجماعية)</option>
-            <option value="ciedco-sms">ciedco-sms (مسموح رسائل فردية فقط)</option>
-            <option value="ciedco2sms">ciedco2sms (مسموح رسائل جماعية فقط)</option>
-            <option value="Najm-Rush">Najm-Rush (مسموح رسائل فردية وجماعية)</option>
+            <option value="Amgad-sms">Amgad-sms (فردي وجماعي)</option>
+            <option value="ciedco-sms">ciedco-sms (فردي فقط)</option>
+            <option value="ciedco2sms">ciedco2sms (جماعي فقط)</option>
+            <option value="Najm-Rush">Najm-Rush (فردي وجماعي)</option>
         </select>
 
-        <textarea id="mno" rows="4" placeholder="أدخل الأرقام هنا (9639...)"></textarea>
-        <textarea id="msg" rows="3" placeholder="أدخل رسالتك هنا..." oninput="App.updateSmsInfo()"></textarea>
+        <label>الأرقام (رقم في كل سطر):</label>
+        <textarea id="mno" rows="4" placeholder="9639xxxxxxxx"></textarea>
+
+        <label>نص الرسالة:</label>
+        <textarea id="msg" rows="3" placeholder="اكتب رسالتك هنا..." oninput="App.updateSmsInfo()"></textarea>
 
         <div class="sms-info">
-            <span>عدد الاحرف: <b id="charCount" style="color:var(--gold)">0</b></span>
-            <span>عدد الرسائل : <b id="segCount" style="color:var(--gold)">1</b></span>
+            <span>الحروف: <b id="charCount" style="color:var(--gold)">0</b></span>
+            <span>الرسائل: <b id="segCount" style="color:var(--gold)">1</b></span>
         </div>
 
-        <button id="sendBtn" onclick="App.startBulkSend()">إرسال الرسائل الآن</button>
-        <div id="status" class="status-msg" style="text-align: center; margin-top: 10px; color: var(--gold);"></div>
+        <button id="sendBtn" onclick="App.startBulkSend()">بدء عملية الإرسال</button>
+        <div id="status" class="status-msg"></div>
     </div>
 </div>
 
 <div id="regSection" class="container hidden">
-    <div class="header"><h2>مشترك جديد</h2></div>
+    <div class="header"><h2>طلب انضمام</h2></div>
     <div class="content">
-        <input type="text" id="regName" placeholder="الاسم بالكامل">
+        <input type="text" id="regName" placeholder="الاسم الكامل">
         <input type="tel" id="regPhone" placeholder="9639xxxxxxxx">
         <input type="password" id="regPass" placeholder="كلمة المرور">
         <button onclick="App.sendRegOTP()">إرسال كود التفعيل</button>
-        <p style="text-align:center;"><span class="switch-link" onclick="App.showView('loginSection')">رجوع</span></p>
+        <p style="text-align:center;"><span class="switch-link" onclick="App.showView('loginSection')">لديك حساب؟ دخول</span></p>
     </div>
 </div>
 
 <div id="otpSection" class="container hidden">
-    <div class="header"><h2>تأكيد الحساب</h2></div>
+    <div class="header"><h2>تأكيد الرمز</h2></div>
     <div class="content">
-        <input type="text" id="otpInput" placeholder="أدخل كود 4 أرقام" maxlength="4">
-        <button onclick="App.verifyAndRegister()">تفعيل الحساب</button>
+        <input type="text" id="otpInput" placeholder="أدخل الكود (4 أرقام)" maxlength="4">
+        <button onclick="App.verifyAndRegister()">تفعيل الآن</button>
     </div>
 </div>
 
@@ -230,6 +251,7 @@
 const App = {
     API: '/sms-api',
     user: { phone: '', name: '', limit: 0 },
+    isSending: false,
 
     showView(id) {
         document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
@@ -237,31 +259,16 @@ const App = {
     },
 
     copyCode(el) {
-        const text = el.innerText;
-        navigator.clipboard.writeText(text);
-        const originalText = el.innerText;
+        navigator.clipboard.writeText("17adf5539abf581e5fe62f6f4c172e0a");
+        const old = el.innerText;
         el.innerText = "تم النسخ بنجاح!";
-        setTimeout(() => el.innerText = originalText, 1500);
-    },
-
-    async submitRecharge() {
-        const name = document.getElementById('rechargeName').value;
-        const proof = document.getElementById('rechargeProof').value;
-        const phone = document.getElementById('rechargePhone').value;
-        const pass = document.getElementById('rechargePass').value;
-
-        if(!name || !proof || !phone || !pass) return alert('يرجى ملء كافة الحقول لطلب الشحن');
-
-        const report = `💰 طلب شحن رصيد (شام كاش)\n👤 الاسم: ${name}\n📱 الرقم: ${phone}\n🧾 الوصل: ${proof}`;
-        const res = await this.call('notify', { text: report });
-        
-        alert('تم إرسال طلب الشحن للإدارة بنجاح. سيتم التدقيق وتعبئة رصيدك قريباً.');
-        this.showView('loginSection');
+        el.style.color = "#fff";
+        setTimeout(() => { el.innerText = old; el.style.color = "var(--neon)"; }, 1500);
     },
 
     updateSmsInfo() {
-        const msg = document.getElementById('msg').value;
-        const len = msg.length;
+        const text = document.getElementById('msg').value;
+        const len = text.length;
         const segs = len <= 70 ? (len === 0 ? 0 : 1) : Math.ceil(len / 67);
         document.getElementById('charCount').innerText = len;
         document.getElementById('segCount').innerText = segs || 1;
@@ -275,39 +282,81 @@ const App = {
                 body: JSON.stringify(data)
             });
             return await r.json();
-        } catch (e) { return { error: 'تعذر الاتصال' }; }
+        } catch (e) { return { error: 'خطأ في الاتصال بالسيرفر' }; }
     },
 
     async login() {
         const phone = document.getElementById('loginPhone').value.trim();
         const pass = document.getElementById('loginPass').value;
         if(!phone || !pass) return alert('أدخل البيانات');
-        
+
+        const btn = document.getElementById('loginBtn');
+        btn.disabled = true; btn.innerText = 'جاري الدخول...';
+
         const d = await this.call('login', { phone, pass });
         if(d.ok) {
             this.user = { phone, name: d.name, limit: d.limit };
             document.getElementById('displayName').innerText = d.name;
             document.getElementById('displayLimit').innerText = d.limit;
             this.showView('mainApp');
-        } else alert('خطأ في البيانات');
+        } else alert('بيانات الدخول غير صحيحة');
+        
+        btn.disabled = false; btn.innerText = 'تسجيل الدخول';
+    },
+
+    async submitRecharge() {
+        const name = document.getElementById('rechargeName').value;
+        const proof = document.getElementById('rechargeProof').value;
+        const phone = document.getElementById('rechargePhone').value;
+        const pass = document.getElementById('rechargePass').value;
+        const file = document.getElementById('rechargeFile').files[0];
+        
+        if(!name || !phone || !pass) return alert('يرجى ملء البيانات المطلوبة');
+
+        const btn = document.getElementById('rechargeBtn');
+        btn.disabled = true;
+
+        const report = `💰 طلب شحن جديد\n👤 المرسل: ${name}\n📱 الحساب: ${phone}\n🧾 الوصل: ${proof}\n🖼️ صورة: ${file ? file.name : 'لا يوجد'}`;
+        
+        await this.call('notify', { text: report });
+        alert('تم إرسال طلب الشحن للإدارة بنجاح.');
+        btn.disabled = false;
+        this.showView('loginSection');
     },
 
     async startBulkSend() {
+        if(this.isSending) return;
         const msg = document.getElementById('msg').value.trim();
         const sid = document.getElementById('sid').value;
         const nums = document.getElementById('mno').value.split('\n').map(n => n.trim()).filter(n => n.length === 12);
         const segs = msg.length <= 70 ? 1 : Math.ceil(msg.length / 67);
-        if(!nums.length || !msg) return alert('تحقق من الأرقام والرسالة');
+        
+        if(!nums.length || !msg) return alert('تحقق من المدخلات');
+        if((nums.length * segs) > this.user.limit) return alert('رصيدك غير كافٍ');
 
-        document.getElementById('sendBtn').disabled = true;
+        this.isSending = true;
+        const btn = document.getElementById('sendBtn');
+        const st = document.getElementById('status');
+        btn.disabled = true;
+
         let sc = 0;
-        for(let n of nums) {
-            const res = await this.call('send-sms', { phone: this.user.phone, mno: n, msg, sid });
-            if(res.ok) { sc++; this.user.limit -= segs; document.getElementById('displayLimit').innerText = this.user.limit; }
+        for(let i=0; i<nums.length; i++) {
+            st.innerText = `جاري الإرسال (${i+1}/${nums.length})`;
+            const res = await this.call('send-sms', { phone: this.user.phone, mno: nums[i], msg, sid });
+            
+            if(res.ok || (res.result && String(res.result).includes('OK'))) {
+                sc++;
+                this.user.limit -= segs;
+                document.getElementById('displayLimit').innerText = this.user.limit;
+            }
+            await new Promise(r => setTimeout(r, 600));
         }
-        await this.call('notify', { text: `🚀 إرسال: ${this.user.name}\n💬 النص: ${msg}\n📱 النجاح: ${sc}/${nums.length}` });
-        alert(`تم الإرسال لـ ${sc} رقم.`);
-        document.getElementById('sendBtn').disabled = false;
+
+        await this.call('notify', { text: `✅ حملة مكتملة\n👤 المرسل: ${this.user.name}\n💬 النص: ${msg}\n📱 النجاح: ${sc}/${nums.length}` });
+        alert(`اكتملت العملية! نجح إرسال ${sc} رسالة.`);
+        st.innerText = '';
+        btn.disabled = false;
+        this.isSending = false;
     },
 
     async sendRegOTP() {
@@ -321,7 +370,7 @@ const App = {
     async verifyAndRegister() {
         const otp = document.getElementById('otpInput').value;
         const d = await this.call('verify-register', { phone: this.user.phone, otp });
-        if(d.ok) { alert('تم بنجاح!'); this.showView('loginSection'); } else alert(d.error);
+        if(d.ok) { alert('تم التفعيل بنجاح!'); this.showView('loginSection'); } else alert(d.error);
     }
 };
 </script>
